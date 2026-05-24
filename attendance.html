@@ -580,8 +580,21 @@ async function submitAttendance() {
 
   try {
     const today = new Date().toISOString().slice(0,10);
-    const dup   = await getDocs(query(collection(db,COL), where('id','==',id), where('date','==',today)));
-    if (!dup.empty) { toast('تم تسجيل هذه الهوية مسبقاً اليوم'); btn.disabled=false; btn.textContent='✓ تسجيل الحضور'; return; }
+
+    // Duplicate check — wrapped separately so a missing index or permission error
+    // doesn't block registration entirely (timeout after 4 s)
+    try {
+      const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 4000));
+      const dup = await Promise.race([
+        getDocs(query(collection(db,COL), where('id','==',id), where('date','==',today))),
+        timeout
+      ]);
+      if (!dup.empty) {
+        toast('تم تسجيل هذه الهوية مسبقاً اليوم');
+        btn.disabled=false; btn.textContent='✓ تسجيل الحضور';
+        return;
+      }
+    } catch(_) { /* proceed even if duplicate check fails */ }
 
     const rec = { name, id, date:today, time:new Date().toISOString(), lat:locationData.lat, lng:locationData.lng, accuracy:locationData.accuracy };
     await addDoc(collection(db,COL), rec);
