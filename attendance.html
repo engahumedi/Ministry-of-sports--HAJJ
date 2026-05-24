@@ -450,7 +450,7 @@ service cloud.firestore {
   <div class="setup-step">
     <div class="step-title"><span class="step-num">٥</span> احصل على إعدادات التطبيق والصقها في الملف</div>
     <div class="step-body">
-      من Project Overview ← ⚙️ Project settings ← أسفل الصفحة اضغط <strong>&lt;/&gt; Web</strong>
+      من Project Overview ← ⚙️ Project settings ← أسفل الصفحة اضغط <strong>&lt;\/&gt; Web</strong>
       ← اكتب اسماً ← <strong>Register app</strong>.<br><br>
       انسخ كائن <code>firebaseConfig</code> الظاهر، افتح <code>attendance.html</code>
       وابحث عن السطر <code>const firebaseConfig = {</code> والصق قيمك بدلاً من <code>PASTE_…</code>.
@@ -475,7 +475,7 @@ const firebaseConfig = {
 // ────────────────────────────────────────────────────────────────────────────
 
 import { initializeApp }       from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot }
+import { getFirestore, collection, deleteDoc, doc, onSnapshot }
                                 from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
                                 from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
@@ -586,7 +586,23 @@ async function submitAttendance() {
   try {
     const today = new Date().toISOString().slice(0,10);
     const rec = { name, id, date:today, time:new Date().toISOString(), lat:locationData.lat, lng:locationData.lng, accuracy:locationData.accuracy };
-    await addDoc(collection(db,COL), rec);
+
+    // Use Firestore REST API directly (avoids WebSocket issues on mobile networks)
+    const ctrl = new AbortController();
+    const tid  = setTimeout(() => ctrl.abort(), 15000);
+    const url  = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${COL}?key=${firebaseConfig.apiKey}`;
+    const body = { fields: {
+      name:     { stringValue: rec.name },
+      id:       { stringValue: rec.id },
+      date:     { stringValue: rec.date },
+      time:     { stringValue: rec.time },
+      lat:      { stringValue: String(rec.lat) },
+      lng:      { stringValue: String(rec.lng) },
+      accuracy: { integerValue: String(rec.accuracy) }
+    }};
+    const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body), signal:ctrl.signal });
+    clearTimeout(tid);
+    if (!res.ok) { const e=await res.json(); throw new Error(e.error?.message||'HTTP '+res.status); }
 
     document.getElementById('formCard').style.display='none';
     document.getElementById('successCard').classList.add('show');
