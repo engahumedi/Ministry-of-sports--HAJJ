@@ -191,7 +191,7 @@ tr:hover td{background:#fafafa}
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot }
+import { initializeFirestore, collection, addDoc, deleteDoc, doc, onSnapshot }
   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
@@ -212,7 +212,7 @@ const firebaseConfig = {
 
 // ─── INIT (db only — auth initialized lazily when admin tab opens) ─────────
 const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+const db  = initializeFirestore(app, { experimentalForceLongPolling: true });
 let auth  = null;
 
 let locationData = null;
