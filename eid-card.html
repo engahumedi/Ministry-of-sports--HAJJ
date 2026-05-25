@@ -15,7 +15,7 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
 .nav-sub{font-size:.75rem;color:rgba(255,255,255,.6);margin-top:2px}
 .nav-back{color:rgba(255,255,255,.8);text-decoration:none;font-size:.85rem;border:1px solid rgba(255,255,255,.3);padding:5px 12px;border-radius:20px}
 
-.tabs-bar{display:flex;max-width:480px;margin:16px auto 0;padding:0 16px;gap:0}
+.tabs-bar{display:flex;max-width:480px;margin:16px auto 0;padding:0 16px}
 .tab-btn{flex:1;padding:11px;border:none;border-radius:10px 10px 0 0;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.95rem;font-weight:700;background:#ddd;color:#555;transition:.2s}
 .tab-btn.active{background:#0a2e18;color:#c9a227}
 
@@ -26,6 +26,7 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
 .field input{width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:10px;font-family:'Tajawal',sans-serif;font-size:1rem;outline:none;transition:.2s;background:#fff}
 .field input:focus{border-color:#1a6b3c;box-shadow:0 0 0 3px rgba(26,107,60,.1)}
 
+/* ── Photo Upload ── */
 .photo-upload-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;cursor:pointer}
 .photo-circle{
   width:130px;height:130px;border-radius:50%;
@@ -43,12 +44,37 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
 
 .submit-btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#1a6b3c,#2e8b57);color:#fff;font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:800;cursor:pointer;transition:.2s;margin-top:4px}
 .submit-btn:hover{opacity:.92}
-
 .gold-btn{background:#c9a227;color:#0a2e18;font-weight:800;padding:12px 28px;border-radius:30px;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:1rem}
 .outline-btn{background:transparent;color:#0a2e18;font-weight:700;padding:12px 24px;border-radius:30px;border:2px solid #0a2e18;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.9rem}
 .btn-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:20px}
 
-/* ── بطاقة المعايدة ─────────────────────────── */
+/* ── Crop Modal ── */
+#crop-modal{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.88);z-index:500;
+  align-items:center;justify-content:center;padding:16px;
+}
+.crop-box{
+  background:#0a2e18;border:2px solid #c9a227;border-radius:18px;
+  padding:22px 20px;width:100%;max-width:320px;
+}
+.crop-title{font-size:1rem;font-weight:800;color:#c9a227;text-align:center;margin-bottom:14px}
+.crop-hint{font-size:.75rem;color:rgba(255,255,255,.45);text-align:center;margin-top:10px;margin-bottom:16px}
+#crop-viewport{
+  width:240px;height:240px;border-radius:50%;overflow:hidden;
+  border:3px solid #c9a227;
+  box-shadow:0 0 0 5px rgba(10,46,24,1),0 0 0 8px rgba(201,162,39,.35);
+  margin:0 auto;position:relative;
+  touch-action:none;cursor:grab;user-select:none;
+  background:#051510;
+}
+#crop-viewport:active{cursor:grabbing}
+#crop-img{position:absolute;max-width:none;user-select:none;pointer-events:none;-webkit-user-drag:none}
+.crop-btns{display:flex;gap:10px;justify-content:center}
+.crop-confirm{background:#c9a227;color:#0a2e18;border:none;padding:10px 28px;border-radius:24px;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:800;cursor:pointer}
+.crop-cancel{background:transparent;color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.25);padding:10px 20px;border-radius:24px;font-family:'Tajawal',sans-serif;font-size:.9rem;cursor:pointer}
+
+/* ── EID CARD ── */
 #card-preview{display:none;margin:0 auto 32px;max-width:480px;padding:0 16px}
 
 .eid-card{
@@ -58,33 +84,42 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
   font-family:'Tajawal',sans-serif;
 }
 
+/* Header */
 .eid-header{
   background:linear-gradient(180deg,#051510 0%,#0a2e18 100%);
   border-bottom:2px solid #c9a227;
-  padding:13px 16px;text-align:center;
+  padding:12px 16px;text-align:center;
 }
 .eid-header-title{font-size:1.05rem;font-weight:900;color:#c9a227;letter-spacing:.3px}
 .eid-header-sub{font-size:.68rem;color:rgba(201,162,39,.5);letter-spacing:.6px;margin-top:1px}
 
+/* Body */
 .eid-body{display:flex;align-items:stretch}
 
+/* Decorative arabesque columns – interlocking diamond argyle */
 .eid-col{
-  width:42px;flex-shrink:0;
-  background:
-    repeating-linear-gradient(0deg,  rgba(201,162,39,.6) 0,rgba(201,162,39,.6) 1px,transparent 1px,transparent 8px),
-    repeating-linear-gradient(90deg, rgba(201,162,39,.6) 0,rgba(201,162,39,.6) 1px,transparent 1px,transparent 8px),
-    #051510;
+  width:46px;flex-shrink:0;
+  background-color:#061a0e;
+  background-image:
+    linear-gradient(135deg, rgba(201,162,39,.55) 25%, transparent 25%),
+    linear-gradient(225deg, rgba(201,162,39,.55) 25%, transparent 25%),
+    linear-gradient(315deg, rgba(201,162,39,.55) 25%, transparent 25%),
+    linear-gradient(45deg,  rgba(201,162,39,.55) 25%, transparent 25%),
+    radial-gradient(circle, rgba(201,162,39,.95) 0 2px, transparent 2px);
+  background-size: 16px 16px;
+  background-position: -8px 0, -8px 0, 0 0, 0 0, 8px 8px;
 }
-.eid-col-r{border-left:1px solid rgba(201,162,39,.35)}
-.eid-col-l{border-right:1px solid rgba(201,162,39,.35)}
+.eid-col-r{border-left:1.5px solid rgba(201,162,39,.4)}
+.eid-col-l{border-right:1.5px solid rgba(201,162,39,.4)}
 
+/* Center */
 .eid-center{
-  flex:1;
-  display:flex;flex-direction:column;align-items:center;
+  flex:1;display:flex;flex-direction:column;align-items:center;
   padding:20px 14px 18px;
   background:radial-gradient(ellipse at 50% 20%,#0e3d20 0%,#0a2e18 65%);
 }
 
+/* Photo */
 .eid-photo-wrap{margin-bottom:14px}
 .eid-photo{
   width:120px;height:120px;border-radius:50%;
@@ -94,45 +129,31 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
   background-size:cover;background-position:center;background-repeat:no-repeat;
 }
 
+/* Ornament */
 .eid-ornament{display:flex;align-items:center;gap:6px;width:92%;margin-bottom:10px}
 .eid-orn-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(201,162,39,.8),transparent)}
 .eid-orn-dot{width:6px;height:6px;background:#c9a227;border-radius:50%;flex-shrink:0}
 
+/* Text */
 .eid-heading{
   font-size:1.5rem;font-weight:900;color:#c9a227;
   text-align:center;letter-spacing:.5px;line-height:1.2;
   text-shadow:0 2px 12px rgba(0,0,0,.7);margin-bottom:3px;
 }
 .eid-heading-lg{font-size:1.95rem}
-
-.eid-eng{
-  font-size:.6rem;color:rgba(201,162,39,.45);
-  letter-spacing:3px;text-align:center;margin-bottom:10px;font-weight:700;
-}
-
+.eid-eng{font-size:.6rem;color:rgba(201,162,39,.45);letter-spacing:3px;text-align:center;margin-bottom:10px;font-weight:700}
 .eid-divider{display:flex;align-items:center;gap:6px;width:80%;margin:4px auto 12px}
+.eid-greeting{font-size:.8rem;color:rgba(255,255,255,.7);text-align:center;line-height:2;margin-bottom:16px}
 
-.eid-greeting{
-  font-size:.8rem;color:rgba(255,255,255,.7);
-  text-align:center;line-height:2;
-  margin-bottom:16px;
-}
-
+/* Name */
 .eid-name-box{
   border:1.5px solid rgba(201,162,39,.75);border-radius:8px;
   padding:8px 24px;min-width:170px;text-align:center;
   background:rgba(201,162,39,.07);
 }
-.eid-name-lbl{font-size:.62rem;color:rgba(201,162,39,.5);letter-spacing:.5px;margin-bottom:2px}
 .eid-name{font-size:1.05rem;font-weight:900;color:#c9a227}
 
-.eid-footer{
-  background:linear-gradient(180deg,#0a2e18 0%,#051510 100%);
-  border-top:2px solid #c9a227;
-  padding:9px 16px;text-align:center;
-  font-size:.68rem;color:rgba(201,162,39,.55);font-weight:700;letter-spacing:.5px;
-}
-
+/* Toast */
 .toast{position:fixed;bottom:20px;right:16px;left:16px;max-width:400px;margin:auto;background:#0a2e18;color:#fff;padding:12px 18px;border-radius:10px;font-size:.9rem;text-align:center;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none}
 .toast.show{opacity:1}
 .toast.err{background:#c62828}
@@ -149,6 +170,21 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
   <a href="index.html" class="nav-back">← الرئيسية</a>
 </nav>
 
+<!-- ── Crop Modal ── -->
+<div id="crop-modal">
+  <div class="crop-box">
+    <div class="crop-title">حدد الجزء الذي يظهر في الإطار</div>
+    <div id="crop-viewport">
+      <img id="crop-img" draggable="false" alt="">
+    </div>
+    <div class="crop-hint">اسحب الصورة لضبط موضعها</div>
+    <div class="crop-btns">
+      <button class="crop-confirm" onclick="confirmCrop()">تأكيد</button>
+      <button class="crop-cancel"  onclick="cancelCrop()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
 <div class="tabs-bar">
   <button class="tab-btn active" id="tb-photo" onclick="switchTab('photo')">مع الصورة</button>
   <button class="tab-btn"        id="tb-text"  onclick="switchTab('text')">بدون صورة</button>
@@ -158,7 +194,6 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
 <div id="tab-photo">
   <div class="form-card">
     <div class="section-title">بطاقة معايدة مع صورتك الشخصية</div>
-
     <div class="photo-upload-wrap" onclick="document.getElementById('photo-file').click()">
       <div class="photo-circle" id="photo-circle">
         <div class="upload-plus">+</div>
@@ -167,7 +202,6 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
       <div class="photo-status" id="photo-status"></div>
     </div>
     <input type="file" id="photo-file" accept="image/*" style="display:none">
-
     <div class="field">
       <label>اسمك الكريم</label>
       <input id="f-name-photo" type="text" placeholder="اكتب اسمك هنا">
@@ -190,26 +224,22 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
 
 <!-- ── معاينة البطاقة ── -->
 <div id="card-preview">
-
   <div class="eid-card" id="the-card">
 
     <div class="eid-header">
-      <div class="eid-header-sub">وزارة الرياضة السعودية</div>
-      <div class="eid-header-title">معسكر المعيصم ( ١ )</div>
       <div class="eid-header-sub">موسم الحج 1447هـ</div>
+      <div class="eid-header-sub" style="color:rgba(201,162,39,.65)">وزارة الرياضة السعودية</div>
+      <div class="eid-header-title">معسكر المعيصم ( ١ )</div>
     </div>
 
     <div class="eid-body">
       <div class="eid-col eid-col-r"></div>
-
       <div class="eid-center">
 
-        <!-- صورة — تبويب 1 -->
         <div class="eid-photo-wrap" id="eid-photo-wrap">
           <div class="eid-photo" id="eid-photo"></div>
         </div>
 
-        <!-- زخرفة بديلة — تبويب 2 -->
         <div class="eid-ornament" id="eid-ornament" style="display:none">
           <div class="eid-orn-line"></div>
           <div class="eid-orn-dot"></div>
@@ -233,26 +263,20 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
         </div>
 
         <div class="eid-name-box">
-          <div class="eid-name-lbl">المُهنَّأ</div>
           <div class="eid-name" id="c-name">—</div>
         </div>
 
       </div>
-
       <div class="eid-col eid-col-l"></div>
     </div>
 
-    <div class="eid-footer">
-      معسكر المعيصم ( ١ ) &nbsp;&nbsp;|&nbsp;&nbsp; 1447هـ
-    </div>
   </div>
 
   <div class="btn-row">
-    <button class="gold-btn" onclick="saveCard()">حفظ كصورة</button>
+    <button class="gold-btn"    onclick="saveCard()">حفظ كصورة</button>
     <button class="outline-btn" onclick="resetForm()">تعديل البيانات</button>
   </div>
   <p style="text-align:center;font-size:.78rem;color:#aaa;margin:10px 0 8px">اضغط "حفظ كصورة" لتنزيل البطاقة على جوالك</p>
-
 </div>
 
 <footer style="text-align:center;padding:28px 16px 40px;font-family:'Tajawal',sans-serif;background:#fff;border-top:2px solid #e8f5e9;margin-top:8px">
@@ -266,22 +290,102 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
 
 <script>
 var photoDataUrl = null;
+var cropX = 0, cropY = 0;
+var dragStartX = 0, dragStartY = 0;
+var isDragging = false;
+var CROP_SIZE = 240;
 
+// ── File input ──────────────────────────────────────────
 document.getElementById('photo-file').addEventListener('change', function(e) {
   var file = e.target.files[0];
   if (!file) return;
   var reader = new FileReader();
-  reader.onload = function(ev) {
-    photoDataUrl = ev.target.result;
-    var circle = document.getElementById('photo-circle');
-    circle.style.backgroundImage = 'url(' + photoDataUrl + ')';
-    circle.classList.add('chosen');
-    circle.innerHTML = '';
-    document.getElementById('photo-status').textContent = 'تم اختيار الصورة';
-  };
+  reader.onload = function(ev) { openCropper(ev.target.result); };
   reader.readAsDataURL(file);
+  // reset so same file can be re-selected
+  e.target.value = '';
 });
 
+// ── Cropper ─────────────────────────────────────────────
+function openCropper(dataUrl) {
+  var modal = document.getElementById('crop-modal');
+  var img   = document.getElementById('crop-img');
+  cropX = 0; cropY = 0;
+  img.src = dataUrl;
+  img.onload = function() {
+    var scale = Math.max(CROP_SIZE / img.naturalWidth, CROP_SIZE / img.naturalHeight) * 1.05;
+    var w = img.naturalWidth  * scale;
+    var h = img.naturalHeight * scale;
+    img.style.width  = w + 'px';
+    img.style.height = h + 'px';
+    cropX = (CROP_SIZE - w) / 2;
+    cropY = (CROP_SIZE - h) / 2;
+    applyCropPos();
+  };
+  modal.style.display = 'flex';
+}
+
+function applyCropPos() {
+  var img = document.getElementById('crop-img');
+  var w = parseFloat(img.style.width)  || CROP_SIZE;
+  var h = parseFloat(img.style.height) || CROP_SIZE;
+  if (cropX > 0) cropX = 0;
+  if (cropY > 0) cropY = 0;
+  if (cropX < CROP_SIZE - w) cropX = CROP_SIZE - w;
+  if (cropY < CROP_SIZE - h) cropY = CROP_SIZE - h;
+  img.style.left = cropX + 'px';
+  img.style.top  = cropY + 'px';
+}
+
+var vp = document.getElementById('crop-viewport');
+vp.addEventListener('pointerdown', function(e) {
+  isDragging = true;
+  dragStartX = e.clientX - cropX;
+  dragStartY = e.clientY - cropY;
+  vp.setPointerCapture(e.pointerId);
+  e.preventDefault();
+}, { passive: false });
+
+vp.addEventListener('pointermove', function(e) {
+  if (!isDragging) return;
+  cropX = e.clientX - dragStartX;
+  cropY = e.clientY - dragStartY;
+  applyCropPos();
+  e.preventDefault();
+}, { passive: false });
+
+vp.addEventListener('pointerup',     function() { isDragging = false; });
+vp.addEventListener('pointercancel', function() { isDragging = false; });
+
+function confirmCrop() {
+  var img = document.getElementById('crop-img');
+  var S   = 2;
+  var canvas = document.createElement('canvas');
+  canvas.width  = CROP_SIZE * S;
+  canvas.height = CROP_SIZE * S;
+  var ctx = canvas.getContext('2d');
+  ctx.beginPath();
+  ctx.arc(CROP_SIZE * S / 2, CROP_SIZE * S / 2, CROP_SIZE * S / 2, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.drawImage(img,
+    cropX * S, cropY * S,
+    parseFloat(img.style.width)  * S,
+    parseFloat(img.style.height) * S
+  );
+  photoDataUrl = canvas.toDataURL('image/jpeg', 0.93);
+  var circle = document.getElementById('photo-circle');
+  circle.style.backgroundImage = 'url(' + photoDataUrl + ')';
+  circle.classList.add('chosen');
+  circle.innerHTML = '';
+  document.getElementById('photo-status').textContent = 'تم اختيار الصورة';
+  document.getElementById('crop-modal').style.display = 'none';
+}
+
+function cancelCrop() {
+  document.getElementById('crop-modal').style.display = 'none';
+}
+
+// ── Tabs ────────────────────────────────────────────────
 function switchTab(t) {
   document.getElementById('tab-photo').style.display = t === 'photo' ? '' : 'none';
   document.getElementById('tab-text').style.display  = t === 'text'  ? '' : 'none';
@@ -290,10 +394,9 @@ function switchTab(t) {
   document.getElementById('card-preview').style.display = 'none';
 }
 
+// ── Generate ────────────────────────────────────────────
 function generateCard(mode) {
-  var nameEl = document.getElementById(mode === 'photo' ? 'f-name-photo' : 'f-name-text');
-  var name   = nameEl.value.trim();
-
+  var name = document.getElementById(mode === 'photo' ? 'f-name-photo' : 'f-name-text').value.trim();
   if (mode === 'photo' && !photoDataUrl) return showToast('اختر صورتك أولاً', 'err');
   if (!name) return showToast('اكتب اسمك الكريم', 'err');
 
@@ -318,24 +421,19 @@ function generateCard(mode) {
   document.getElementById('card-preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+// ── Save ────────────────────────────────────────────────
 function saveCard() {
   var card = document.getElementById('the-card');
   var name = document.getElementById('c-name').textContent || 'معايدة';
   showToast('جارٍ تجهيز البطاقة...', '');
-  html2canvas(card, {
-    scale: 2,
-    useCORS: true,
-    allowTaint: false,
-    backgroundColor: '#0a2e18'
-  }).then(function(canvas) {
-    var link = document.createElement('a');
-    link.download = 'معايدة_' + name + '.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    showToast('تم حفظ البطاقة بنجاح', 'ok');
-  }).catch(function() {
-    showToast('تعذّر حفظ الصورة', 'err');
-  });
+  html2canvas(card, { scale: 2, useCORS: true, allowTaint: false, backgroundColor: '#0a2e18' })
+    .then(function(canvas) {
+      var link = document.createElement('a');
+      link.download = 'معايدة_' + name + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('تم حفظ البطاقة بنجاح', 'ok');
+    }).catch(function() { showToast('تعذّر حفظ الصورة', 'err'); });
 }
 
 function resetForm() {
