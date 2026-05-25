@@ -92,7 +92,9 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
 #scanner-canvas{display:none}
 .scan-status{text-align:center;margin-top:12px;font-size:.9rem;color:#666;min-height:24px}
 
-.result-box{background:#e8f5e9;border:2px solid #1a6b3c;border-radius:12px;padding:18px;margin-top:16px;display:none}
+.result-box{border:2px solid #1a6b3c;border-radius:12px;padding:18px;margin-top:16px;display:none}
+.result-box.ok{background:#e8f5e9;border-color:#1a6b3c}
+.result-box.fail{background:#ffebee;border-color:#c62828}
 .result-box h3{font-size:1rem;font-weight:800;color:#1a6b3c;margin-bottom:12px}
 .result-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #c8e6c9;font-size:.9rem}
 .result-row:last-child{border:none}
@@ -165,7 +167,6 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
         <div id="qr-container"></div>
       </div>
       <div class="id-card-footer">
-        <span>المركز الإعلامي – معسكر المعيصم القديم</span>
         <strong>Maysam Camp 1447</strong>
       </div>
     </div>
@@ -194,11 +195,21 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
     <div class="scan-status" id="scan-status">جارٍ تشغيل الكاميرا...</div>
 
     <div class="result-box" id="result-box">
-      <h3>✅ تم التحقق من البطاقة</h3>
-      <div class="result-row"><span class="r-lbl">الاسم</span><span class="r-val" id="r-name"></span></div>
-      <div class="result-row"><span class="r-lbl">رقم الهوية</span><span class="r-val" id="r-id" style="direction:ltr"></span></div>
-      <div class="result-row"><span class="r-lbl">القائد</span><span class="r-val" id="r-leader"></span></div>
-      <div class="result-row"><span class="r-lbl">الجناح / الفصيل</span><span class="r-val" id="r-wing"></span></div>
+      <!-- ✅ مسجّل -->
+      <div id="verify-ok" style="display:none">
+        <h3 style="color:#1a6b3c;font-size:1.05rem;margin-bottom:12px">✅ بطاقة مسجّلة وموثّقة</h3>
+        <div class="result-row"><span class="r-lbl">الاسم</span><span class="r-val" id="r-name"></span></div>
+        <div class="result-row"><span class="r-lbl">رقم الهوية</span><span class="r-val" id="r-id" style="direction:ltr"></span></div>
+        <div class="result-row"><span class="r-lbl">القائد</span><span class="r-val" id="r-leader"></span></div>
+        <div class="result-row"><span class="r-lbl">الجناح / الفصيل</span><span class="r-val" id="r-wing"></span></div>
+      </div>
+      <!-- ❌ غير مسجّل -->
+      <div id="verify-fail" style="display:none">
+        <h3 style="color:#c62828;font-size:1.05rem;margin-bottom:8px">❌ بطاقة غير مسجّلة</h3>
+        <p style="color:#c62828;font-size:.88rem;margin-bottom:12px">لم يتم العثور على هذه البطاقة في قاعدة البيانات</p>
+        <div class="result-row"><span class="r-lbl">الاسم (من الباركود)</span><span class="r-val" id="r-name-qr"></span></div>
+        <div class="result-row"><span class="r-lbl">رقم الهوية</span><span class="r-val" id="r-id-qr" style="direction:ltr"></span></div>
+      </div>
       <button class="submit-btn" onclick="resetScan()" style="margin-top:14px;background:linear-gradient(135deg,#0a2e18,#1a6b3c)">🔄 مسح بطاقة أخرى</button>
     </div>
   </div>
@@ -214,6 +225,9 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
 <div class="toast" id="toast"></div>
 
 <script>
+// ── رابط Apps Script (ضعه بعد النشر) ─────────────────────────────────────
+const SCRIPT_URL = '';
+
 // ── التبويبات ─────────────────────────────────────────────────────────────
 function switchTab(t) {
   document.getElementById('tab-gen').style.display  = t === 'gen'  ? '' : 'none';
@@ -263,6 +277,15 @@ function generateCard() {
 
   document.getElementById('card-preview').style.display = 'block';
   document.getElementById('card-preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // حفظ البيانات في قاعدة البيانات
+  if (SCRIPT_URL) {
+    fetch(SCRIPT_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'register', id: idNum, name: name, leader: leader, wing: wing })
+    }).then(() => showToast('تم حفظ البطاقة في قاعدة البيانات ✅', 'ok')).catch(() => {});
+  }
 }
 
 function resetForm() {
@@ -339,18 +362,63 @@ function stopScanner() {
 }
 
 function parseQR(data) {
-  // تنسيق: "الاسم: X\nالهوية: Y\nالقائد: Z\nالجناح: W"
   const get = (label) => {
     const match = data.match(new RegExp(label + ':\\s*(.+)'));
     return match ? match[1].trim() : '—';
   };
-  document.getElementById('r-name').textContent   = get('الاسم');
-  document.getElementById('r-id').textContent     = get('الهوية');
-  document.getElementById('r-leader').textContent = get('القائد');
-  document.getElementById('r-wing').textContent   = get('الجناح');
-  document.getElementById('result-box').style.display = 'block';
-  document.getElementById('scan-status').textContent  = '✅ تم قراءة البطاقة';
+  const qrName   = get('الاسم');
+  const qrId     = get('الهوية');
+  const qrLeader = get('القائد');
+  const qrWing   = get('الجناح');
+
+  const box = document.getElementById('result-box');
+  box.style.display = 'block';
+  document.getElementById('verify-ok').style.display   = 'none';
+  document.getElementById('verify-fail').style.display = 'none';
   document.getElementById('result-box').scrollIntoView({ behavior: 'smooth' });
+
+  if (!SCRIPT_URL) {
+    // بدون قاعدة بيانات – عرض بيانات QR مباشرة
+    document.getElementById('verify-ok').style.display = '';
+    document.getElementById('r-name').textContent   = qrName;
+    document.getElementById('r-id').textContent     = qrId;
+    document.getElementById('r-leader').textContent = qrLeader;
+    document.getElementById('r-wing').textContent   = qrWing;
+    box.className = 'result-box ok';
+    document.getElementById('scan-status').textContent = '✅ تم قراءة الباركود';
+    return;
+  }
+
+  document.getElementById('scan-status').textContent = 'جارٍ التحقق من قاعدة البيانات...';
+  fetch(SCRIPT_URL + '?action=verify&id=' + encodeURIComponent(qrId))
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.ok && res.data) {
+        document.getElementById('verify-ok').style.display = '';
+        document.getElementById('r-name').textContent   = res.data.name;
+        document.getElementById('r-id').textContent     = res.data.id;
+        document.getElementById('r-leader').textContent = res.data.leader;
+        document.getElementById('r-wing').textContent   = res.data.wing;
+        box.className = 'result-box ok';
+        document.getElementById('scan-status').textContent = '✅ بطاقة مسجّلة وموثّقة';
+      } else {
+        document.getElementById('verify-fail').style.display = '';
+        document.getElementById('r-name-qr').textContent = qrName;
+        document.getElementById('r-id-qr').textContent   = qrId;
+        box.className = 'result-box fail';
+        document.getElementById('scan-status').textContent = '❌ بطاقة غير مسجّلة';
+      }
+    })
+    .catch(function() {
+      // خطأ في الشبكة – عرض بيانات QR كاحتياط
+      document.getElementById('verify-ok').style.display = '';
+      document.getElementById('r-name').textContent   = qrName;
+      document.getElementById('r-id').textContent     = qrId;
+      document.getElementById('r-leader').textContent = qrLeader;
+      document.getElementById('r-wing').textContent   = qrWing;
+      box.className = 'result-box ok';
+      document.getElementById('scan-status').textContent = '⚠️ تعذّر الاتصال بالخادم';
+    });
 }
 
 function resetScan() {

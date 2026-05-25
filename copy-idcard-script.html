@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>كود بطاقة الهوية – Apps Script</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;background:#f5f5f5;padding:20px;color:#1a1a1a}
+h2{color:#0a2e18;margin-bottom:8px;font-size:1.3rem}
+p{color:#666;font-size:.9rem;margin-bottom:14px;line-height:1.7}
+textarea{width:100%;height:380px;font-family:monospace;font-size:.78rem;padding:12px;border:2px solid #ccc;border-radius:10px;resize:vertical;direction:ltr;text-align:left}
+button{margin-top:12px;background:#0a2e18;color:#c9a227;border:none;padding:12px 28px;border-radius:30px;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:800;cursor:pointer}
+.note{background:#fff8e1;border:2px solid #c9a227;border-radius:10px;padding:14px;margin-top:20px;font-size:.88rem;line-height:1.8;color:#333}
+.note b{color:#0a2e18}
+</style>
+</head>
+<body>
+<h2>كود Apps Script – بطاقات الهوية</h2>
+<p>انسخ الكود أدناه وأنشئ مشروع Apps Script جديد ثم الصق فيه واضغط نشر.</p>
+<textarea id="code" readonly></textarea>
+<br>
+<button onclick="copyCode()">نسخ الكود</button>
+
+<div class="note">
+  <b>خطوات النشر:</b><br>
+  1. افتح <b>script.google.com</b> → مشروع جديد<br>
+  2. احذف الكود الموجود والصق الكود المنسوخ<br>
+  3. احفظ (Ctrl+S) ثم اضغط <b>نشر → نشر كتطبيق ويب</b><br>
+  4. التنفيذ: <b>أنا</b> | من يمكنه الوصول: <b>الجميع</b><br>
+  5. انسخ الرابط الناتج وضعه في <b>id-card.html</b> في المتغير <b>SCRIPT_URL</b>
+</div>
+
+<script>
+var code = `// ── بطاقات الهوية – معسكر المعيصم 1447 ──────────────────────────────────────
+// انشر هذا الكود في Google Apps Script كـ Web App (تنفيذ: أنا، وصول: الجميع)
+
+var SHEET_NAME = 'id_cards';
+
+function getSheet() {
+  var prop = PropertiesService.getScriptProperties().getProperty('IDCARD_SHEET_ID');
+  var ss;
+  if (prop) {
+    try { ss = SpreadsheetApp.openById(prop); } catch (e) { ss = null; }
+  }
+  if (!ss) {
+    ss = SpreadsheetApp.create('بطاقات الهوية - معسكر المعيصم 1447');
+    PropertiesService.getScriptProperties().setProperty('IDCARD_SHEET_ID', ss.getId());
+  }
+  var sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_NAME);
+    sheet.appendRow(['رقم الهوية', 'الاسم الكامل', 'القائد', 'الجناح', 'تاريخ التسجيل']);
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+function out(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    if (data.action === 'register') {
+      var id     = String(data.id     || '').trim();
+      var name   = String(data.name   || '').trim();
+      var leader = String(data.leader || '').trim();
+      var wing   = String(data.wing   || '').trim();
+      if (!id || !name) { return out({ok: false, msg: 'بيانات ناقصة'}); }
+
+      var sheet = getSheet();
+      var rows  = sheet.getDataRange().getValues();
+      var existingRow = -1;
+      rows.forEach(function(row, i) {
+        if (i > 0 && String(row[0]).trim() === id) { existingRow = i + 1; }
+      });
+
+      var ts = Utilities.formatDate(new Date(), 'Asia/Riyadh', 'yyyy-MM-dd HH:mm');
+      if (existingRow > 0) {
+        sheet.getRange(existingRow, 1, 1, 5).setValues([[id, name, leader, wing, ts]]);
+      } else {
+        sheet.appendRow([id, name, leader, wing, ts]);
+      }
+      return out({ok: true});
+    }
+    return out({ok: false, msg: 'action غير معروف'});
+  } catch (err) {
+    return out({ok: false, msg: err.toString()});
+  }
+}
+
+function doGet(e) {
+  var action = e.parameter.action;
+
+  if (action === 'verify') {
+    var id    = String(e.parameter.id || '').trim();
+    var sheet = getSheet();
+    var rows  = sheet.getDataRange().getValues();
+    var found = null;
+    rows.forEach(function(row, i) {
+      if (i > 0 && String(row[0]).trim() === id) {
+        found = { id: row[0], name: row[1], leader: row[2], wing: row[3], ts: row[4] };
+      }
+    });
+    if (found) { return out({ok: true, data: found}); }
+    return out({ok: false, msg: 'غير مسجّل'});
+  }
+
+  if (action === 'getAll') {
+    var sheet  = getSheet();
+    var rows   = sheet.getDataRange().getValues();
+    var result = [];
+    rows.forEach(function(row, i) {
+      if (i > 0 && row[0]) {
+        result.push({ id: row[0], name: row[1], leader: row[2], wing: row[3], ts: row[4] });
+      }
+    });
+    return out({ok: true, data: result});
+  }
+
+  return out({ok: false, msg: 'action غير معروف'});
+}`;
+
+document.getElementById('code').value = code;
+
+function copyCode() {
+  var ta = document.getElementById('code');
+  ta.select();
+  ta.setSelectionRange(0, 99999);
+  document.execCommand('copy');
+  var btn = document.querySelector('button');
+  btn.textContent = '✅ تم النسخ';
+  setTimeout(function() { btn.textContent = 'نسخ الكود'; }, 2000);
+}
+</script>
+</body>
+</html>
