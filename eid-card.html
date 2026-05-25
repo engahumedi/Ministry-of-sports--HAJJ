@@ -467,11 +467,13 @@ function generateCard(mode) {
     photoWrap.style.display = '';
     ornament.style.display  = 'none';
     heading.className = 'eid-heading';
+    heading.textContent = 'عيد الأضحى مبارك';
     document.getElementById('eid-photo').style.backgroundImage = 'url(' + photoDataUrl + ')';
   } else {
     photoWrap.style.display = 'none';
     ornament.style.display  = 'flex';
     heading.className = 'eid-heading eid-heading-lg';
+    heading.textContent = 'عيد أضحى مبارك';
   }
 
   document.getElementById('card-preview').style.display = 'block';
