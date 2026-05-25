@@ -127,9 +127,9 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
   <div class="card">
     <div class="section-title">أدخل بياناتك لتوليد بطاقتك</div>
     <div class="field"><label>الاسم الكامل</label><input id="f-name" type="text" placeholder="محمد عبدالله الشهري"></div>
-    <div class="field"><label>رقم الهوية الوطنية</label><input id="f-id" type="text" inputmode="numeric" placeholder="10 أرقام"></div>
+    <div class="field"><label>رقم الهوية الوطنية</label><input id="f-id" type="text" inputmode="numeric" placeholder="10 أرقام" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
     <div class="field"><label>اسم القائد</label><input id="f-leader" type="text" placeholder="م.المهند حمدي"></div>
-    <div class="field"><label>رقم الجناح / الفصيل</label><input id="f-wing" type="text" placeholder="الجناح الثالث"></div>
+    <div class="field"><label>رقم الجناح</label><input id="f-wing" type="text" placeholder="الجناح الثالث"></div>
     <button class="submit-btn" onclick="generateCard()">توليد البطاقة</button>
   </div>
 
@@ -160,7 +160,7 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
             <div class="id-card-row-val" id="c-leader">—</div>
           </div>
           <div class="id-card-row" style="margin-bottom:0">
-            <div class="id-card-row-label">الجناح / الفصيل</div>
+            <div class="id-card-row-label">الجناح</div>
             <div class="id-card-row-val" id="c-wing">—</div>
           </div>
         </div>
@@ -201,7 +201,7 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
         <div class="result-row"><span class="r-lbl">الاسم</span><span class="r-val" id="r-name"></span></div>
         <div class="result-row"><span class="r-lbl">رقم الهوية</span><span class="r-val" id="r-id" style="direction:ltr"></span></div>
         <div class="result-row"><span class="r-lbl">القائد</span><span class="r-val" id="r-leader"></span></div>
-        <div class="result-row"><span class="r-lbl">الجناح / الفصيل</span><span class="r-val" id="r-wing"></span></div>
+        <div class="result-row"><span class="r-lbl">الجناح</span><span class="r-val" id="r-wing"></span></div>
       </div>
       <!-- ❌ غير مسجّل -->
       <div id="verify-fail" style="display:none">
@@ -255,6 +255,7 @@ function generateCard() {
 
   if (!name)   return showToast('أدخل الاسم الكامل', 'err');
   if (!idNum)  return showToast('أدخل رقم الهوية', 'err');
+  if (idNum.length !== 10) return showToast('رقم الهوية يجب أن يكون 10 أرقام', 'err');
   if (!leader) return showToast('أدخل اسم القائد', 'err');
   if (!wing)   return showToast('أدخل رقم الجناح', 'err');
 
