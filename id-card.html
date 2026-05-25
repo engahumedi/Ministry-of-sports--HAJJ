@@ -111,15 +111,15 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
 
 <nav>
   <div>
-    <div class="nav-title">🪪 بطاقة الهوية الرقمية</div>
+    <div class="nav-title">بطاقة الهوية الرقمية</div>
     <div class="nav-sub">معسكر المعيصم 1447</div>
   </div>
   <a href="index.html" class="nav-back">← الرئيسية</a>
 </nav>
 
 <div class="tabs-bar">
-  <button class="tab-btn active" id="tb-gen" onclick="switchTab('gen')">🪪 توليد البطاقة</button>
-  <button class="tab-btn" id="tb-scan" onclick="switchTab('scan')">📷 مسح البطاقة</button>
+  <button class="tab-btn active" id="tb-gen" onclick="switchTab('gen')">توليد البطاقة</button>
+  <button class="tab-btn" id="tb-scan" onclick="switchTab('scan')">مسح البطاقة</button>
 </div>
 
 <!-- ── تبويب التوليد ── -->
@@ -130,7 +130,7 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
     <div class="field"><label>رقم الهوية الوطنية</label><input id="f-id" type="text" inputmode="numeric" placeholder="10 أرقام"></div>
     <div class="field"><label>اسم القائد</label><input id="f-leader" type="text" placeholder="م.المهند حمدي"></div>
     <div class="field"><label>رقم الجناح / الفصيل</label><input id="f-wing" type="text" placeholder="الجناح الثالث"></div>
-    <button class="submit-btn" onclick="generateCard()">⚡ توليد البطاقة</button>
+    <button class="submit-btn" onclick="generateCard()">توليد البطاقة</button>
   </div>
 
   <div id="card-preview" style="padding:0 16px">
@@ -172,8 +172,8 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
     </div>
 
     <div class="btn-row" style="justify-content:center">
-      <button class="gold-btn" onclick="saveCard()">💾 حفظ كصورة</button>
-      <button class="outline-btn" onclick="resetForm()">✏️ تعديل البيانات</button>
+      <button class="gold-btn" onclick="saveCard()">حفظ كصورة</button>
+      <button class="outline-btn" onclick="resetForm()">تعديل البيانات</button>
     </div>
     <p style="text-align:center;font-size:.78rem;color:#aaa;margin-top:10px;margin-bottom:8px">اضغط "حفظ كصورة" لتنزيل البطاقة على جوالك</p>
   </div>
@@ -182,7 +182,7 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
 <!-- ── تبويب المسح ── -->
 <div id="tab-scan" style="display:none">
   <div class="card">
-    <div class="section-title">📷 مسح QR لتحقق من الهوية</div>
+    <div class="section-title">مسح QR للتحقق من الهوية</div>
     <p style="font-size:.88rem;color:#666;margin-bottom:16px">وجّه الكاميرا نحو QR code في بطاقة الفرد</p>
 
     <div class="scanner-wrap">
@@ -210,7 +210,7 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
         <div class="result-row"><span class="r-lbl">الاسم (من الباركود)</span><span class="r-val" id="r-name-qr"></span></div>
         <div class="result-row"><span class="r-lbl">رقم الهوية</span><span class="r-val" id="r-id-qr" style="direction:ltr"></span></div>
       </div>
-      <button class="submit-btn" onclick="resetScan()" style="margin-top:14px;background:linear-gradient(135deg,#0a2e18,#1a6b3c)">🔄 مسح بطاقة أخرى</button>
+      <button class="submit-btn" onclick="resetScan()" style="margin-top:14px;background:linear-gradient(135deg,#0a2e18,#1a6b3c)">مسح بطاقة أخرى</button>
     </div>
   </div>
 </div>
@@ -218,7 +218,7 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
 <footer style="text-align:center;padding:28px 16px 40px;font-family:'Tajawal',sans-serif;background:#fff;border-top:2px solid #e8f5e9;margin-top:8px">
   <div style="font-size:.85rem;color:#888;margin-bottom:6px">تصميم وبرمجة</div>
   <div style="font-size:1.2rem;font-weight:900;color:#0a2e18">القائد / م.المهند حمدي</div>
-  <a href="https://wa.me/966599746324" target="_blank" style="display:inline-block;margin-top:8px;background:#25d366;color:#fff;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;padding:8px 22px;border-radius:30px;text-decoration:none">💬 تواصل واتساب</a>
+  <a href="https://wa.me/966599746324" target="_blank" style="display:inline-block;margin-top:8px;background:#25d366;color:#fff;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;padding:8px 22px;border-radius:30px;text-decoration:none">تواصل واتساب</a>
   <div style="width:48px;height:3px;background:#c9a227;border-radius:4px;margin:12px auto 0"></div>
 </footer>
 

@@ -100,7 +100,7 @@ nav{background:#0a2e18;color:#c9a227;padding:14px 20px;display:flex;align-items:
 
 <nav>
   <div>
-    <div class="nav-title">🚪 استئذان الخروج</div>
+    <div class="nav-title">استئذان الخروج</div>
     <div class="nav-sub">معسكر المعيصم 1447</div>
   </div>
   <a href="index.html" class="nav-back">← الرئيسية</a>
@@ -141,10 +141,10 @@ function post(body) {
 
 function tabs(active) {
   return `<div class="tabs-bar">
-    <button class="tab-btn ${active==='member'?'active':''}" onclick="goTab('member')">📋 طلب خروج</button>
-    <button class="tab-btn ${active==='track'?'active':''}"  onclick="goTab('track')">🔍 متابعة</button>
-    <button class="tab-btn ${active==='leader'?'active':''}" onclick="goTab('leader')">👤 القائد</button>
-    <button class="tab-btn ${active==='admin'?'active':''}"  onclick="goTab('admin')">⚙️ المشرف</button>
+    <button class="tab-btn ${active==='member'?'active':''}" onclick="goTab('member')">طلب خروج</button>
+    <button class="tab-btn ${active==='track'?'active':''}"  onclick="goTab('track')">متابعة</button>
+    <button class="tab-btn ${active==='leader'?'active':''}" onclick="goTab('leader')">القائد</button>
+    <button class="tab-btn ${active==='admin'?'active':''}"  onclick="goTab('admin')">المشرف</button>
   </div>`;
 }
 
@@ -203,7 +203,7 @@ async function viewMember() {
 // ─── TRACK ────────────────────────────────────────────────────────────────────
 function viewTrack() {
   app.innerHTML = tabs('track') + `<div class="card">
-    <div class="section-title">🔍 متابعة حالة الطلب</div>
+    <div class="section-title">متابعة حالة الطلب</div>
     <div class="field"><label>رقم الطلب</label><input id="t-id" type="text" placeholder="أدخل رقم الطلب"></div>
     <button class="submit-btn" id="t-go">تحقق من الحالة</button>
   </div>`;
@@ -308,7 +308,7 @@ async function viewLeaderPanel(lid, lkey) {
           const noteHtml = r.note ? `<p>💬 ${r.note}</p>` : '';
           const actions = r.status === 'pending' ? `
             <div class="req-actions">
-              <button class="approve-btn" onclick="doUpdate('${r.id}','${lid}','${lkey}','approved')">✅ موافقة</button>
+              <button class="approve-btn" onclick="doUpdate('${r.id}','${lid}','${lkey}','approved')">موافقة</button>
               <button class="reject-btn"  onclick="toggleNote('${r.id}')">❌ رفض</button>
             </div>
             <div class="note-box" id="nb-${r.id}">
@@ -352,7 +352,7 @@ async function viewLeaderPanel(lid, lkey) {
 function viewAdminLogin() {
   app.innerHTML = tabs('admin') + `<div class="card">
     <div class="lock-box">
-      <span class="lock-icon">🔐</span>
+      <span class="lock-icon"></span>
       <div class="lock-title">دخول المشرف</div>
       <div class="lock-sub">هذه الصفحة للمشرف فقط</div>
     </div>
@@ -490,7 +490,7 @@ else                         viewMember();
 <footer style="text-align:center;padding:28px 16px 40px;font-family:'Tajawal',sans-serif;background:#fff;border-top:2px solid #e8f5e9;margin-top:8px">
   <div style="font-size:.85rem;color:#888;margin-bottom:6px">تصميم وبرمجة</div>
   <div style="font-size:1.2rem;font-weight:900;color:#0a2e18">القائد / م.المهند حمدي</div>
-  <a href="https://wa.me/966599746324" target="_blank" style="display:inline-block;margin-top:8px;background:#25d366;color:#fff;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;padding:8px 22px;border-radius:30px;text-decoration:none">💬 تواصل واتساب</a>
+  <a href="https://wa.me/966599746324" target="_blank" style="display:inline-block;margin-top:8px;background:#25d366;color:#fff;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;padding:8px 22px;border-radius:30px;text-decoration:none">تواصل واتساب</a>
   <div style="width:48px;height:3px;background:#c9a227;border-radius:4px;margin:10px auto 0"></div>
 </footer>
 </body>

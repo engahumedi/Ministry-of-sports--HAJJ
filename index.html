@@ -347,6 +347,25 @@ footer { background:var(--g1); padding:2.5rem 2rem; text-align:center; }
 .duty-info-item { color:rgba(255,255,255,.7); font-size:.85rem; }
 .duty-info-item strong { color:var(--gold2); font-size:1rem; }
 
+/* ── Hamburger & Side Drawer ── */
+.hamburger{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px;align-items:center}
+.hamburger span{display:block;width:22px;height:2px;background:#c9a227;border-radius:2px;transition:.3s}
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.drawer-overlay.open{opacity:1;pointer-events:all}
+.side-drawer{position:fixed;top:0;right:-290px;width:272px;height:100vh;background:#0a2e18;z-index:201;transition:right .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding-bottom:40px;border-left:2px solid rgba(201,162,39,.35)}
+.side-drawer.open{right:0}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid rgba(201,162,39,.2)}
+.drawer-logo{font-size:.92rem;font-weight:900;color:#c9a227;line-height:1.4}
+.drawer-logo span{display:block;font-size:.7rem;color:rgba(255,255,255,.45);font-weight:400}
+.drawer-close{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:4px 10px;border-radius:6px;line-height:1.4;font-family:'Tajawal',sans-serif}
+.drawer-close:hover{background:rgba(255,255,255,.1);color:#fff}
+.drawer-sec{padding:14px 12px 4px}
+.drawer-sec-lbl{font-size:.68rem;font-weight:900;color:rgba(201,162,39,.65);letter-spacing:.6px;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid rgba(201,162,39,.15)}
+.drawer-link{display:block;padding:10px 12px;color:rgba(255,255,255,.78);font-size:.9rem;font-weight:500;text-decoration:none;border-radius:8px;margin-bottom:2px;transition:.2s}
+.drawer-link:hover{background:rgba(255,255,255,.07);color:#fff}
+.drawer-link.svc{color:#c9a227;font-weight:700;background:rgba(201,162,39,.07);border-right:3px solid rgba(201,162,39,.5)}
+.drawer-link.svc:hover{background:rgba(201,162,39,.15)}
+
 </style>
 </head>
 <body>
@@ -360,17 +379,34 @@ footer { background:var(--g1); padding:2.5rem 2rem; text-align:center; }
       <span>موسم الحج 1447هـ</span>
     </div>
   </a>
-  <ul class="nav-links">
-    <li><a href="id-card.html">🪪 بطاقة الهوية</a></li>
-    <li><a href="#announcements">الإعلانات</a></li>
-    <li><a href="#dashboard">الإحصائيات</a></li>
-    
-    <li><a href="#mina-map">خريطة منى</a></li><li><a href="#schedule">الجدول</a></li>
-    <li><a href="#programs">البرامج</a></li>
-    <li><a href="#duty">الدوري</a></li><li><a href="#guide">دليل المشارك</a></li>
-    
-  </ul>
+  <button class="hamburger" onclick="openDrawer()" aria-label="القائمة">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="side-drawer" id="sideDrawer">
+  <div class="drawer-head">
+    <div class="drawer-logo">معسكر المعيصم ( ١ )<span>موسم الحج 1447هـ</span></div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-sec">
+    <div class="drawer-sec-lbl">الخدمات</div>
+    <a href="attendance.html" class="drawer-link svc">تسجيل الحضور</a>
+    <a href="exit.html" class="drawer-link svc">استئذان الخروج</a>
+    <a href="id-card.html" class="drawer-link svc">بطاقة الهوية</a>
+  </div>
+  <div class="drawer-sec">
+    <div class="drawer-sec-lbl">تنقل الصفحة</div>
+    <a href="#announcements" class="drawer-link" onclick="closeDrawer()">الإعلانات</a>
+    <a href="#dashboard" class="drawer-link" onclick="closeDrawer()">الإحصائيات</a>
+    <a href="#mina-map" class="drawer-link" onclick="closeDrawer()">خريطة منى</a>
+    <a href="#schedule" class="drawer-link" onclick="closeDrawer()">الجدول</a>
+    <a href="#programs" class="drawer-link" onclick="closeDrawer()">البرامج</a>
+    <a href="#duty" class="drawer-link" onclick="closeDrawer()">الدوري</a>
+    <a href="#guide" class="drawer-link" onclick="closeDrawer()">دليل المشارك</a>
+  </div>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -393,15 +429,13 @@ footer { background:var(--g1); padding:2.5rem 2rem; text-align:center; }
   ">
     <span style="color:rgba(255,255,255,.6);font-size:.85rem;">تصميم الموقع: </span>
     <span style="color:var(--gold2);font-size:1rem;font-weight:800;">القائد / م.المهند حمدي</span>
-    <a href="https://wa.me/966599746324" target="_blank" style="display:inline-block;margin-right:8px;background:#25d366;color:#fff;font-size:.82rem;font-weight:700;padding:4px 14px;border-radius:20px;text-decoration:none">💬 واتساب</a>
+    <a href="https://wa.me/966599746324" target="_blank" style="display:inline-block;margin-right:8px;background:#25d366;color:#fff;font-size:.82rem;font-weight:700;padding:4px 14px;border-radius:20px;text-decoration:none">واتساب</a>
   </div>
   <div class="hero-cta">
-    <a href="attendance.html" class="btn-primary" style="text-decoration:none">✏️ تسجيل الحضور</a>
-    <a href="exit.html" class="btn-primary" style="text-decoration:none;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.4)">🚪 استئذان الخروج</a>
-    <a href="id-card.html" class="btn-primary" style="text-decoration:none;background:rgba(201,162,39,.25);border:2px solid var(--gold)">🪪 بطاقة الهوية</a>
+    <button class="btn-primary" onclick="openDrawer()" style="background:var(--gold);color:var(--g1);border:none;font-weight:800">الخدمات والتنقل</button>
     <button class="btn-primary" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})" style="background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4)">استعرض الموقع</button>
     <a href="https://maps.app.goo.gl/cAcAtTU83T67hXNw7?g_st=ic" target="_blank" class="btn-outline">
-      📍 موقع المعسكر على الخريطة
+      موقع المعسكر على الخريطة
     </a>
   </div>
   <div class="scroll-hint">
@@ -423,7 +457,7 @@ footer { background:var(--g1); padding:2.5rem 2rem; text-align:center; }
       <!-- إعلان 1 -->
       <div style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(10,46,24,.1);border:1px solid rgba(201,162,39,.2)">
         <div style="background:linear-gradient(135deg,var(--g1),var(--g2));padding:14px 18px;display:flex;align-items:center;justify-content:space-between">
-          <span style="background:var(--gold);color:var(--g1);font-size:.75rem;font-weight:800;padding:3px 12px;border-radius:20px">🏆 إنجاز</span>
+          <span style="background:var(--gold);color:var(--g1);font-size:.75rem;font-weight:800;padding:3px 12px;border-radius:20px">إنجاز</span>
           <span style="color:rgba(255,255,255,.6);font-size:.78rem">1447/12/05</span>
         </div>
         <div style="padding:18px">
@@ -512,7 +546,7 @@ footer { background:var(--g1); padding:2.5rem 2rem; text-align:center; }
           font-family:'Tajawal',sans-serif; font-weight:700;
           border:1px solid rgba(201,162,39,.4); white-space:nowrap;
           pointer-events:none;
-        ">🔍 اضغط لعرض الخريطة كاملة</div>
+        ">اضغط لعرض الخريطة كاملة</div>
       </div>
 
       <!-- Info cards below map -->
@@ -595,8 +629,8 @@ document.addEventListener('keydown', e => {
     </div>
     <div class="schedule-nav">
       <button class="sch-tab active" onclick="filterSchedule('all',this)">الكل</button>
-      <button class="sch-tab" onclick="filterSchedule('prayer',this)">🕌 الصلوات</button>
-      <button class="sch-tab" onclick="filterSchedule('meal',this)">🍽️ الوجبات</button>
+      <button class="sch-tab" onclick="filterSchedule('prayer',this)">الصلوات</button>
+      <button class="sch-tab" onclick="filterSchedule('meal',this)">الوجبات</button>
       <button class="sch-tab" onclick="filterSchedule('activity',this)">⚙️ الأنشطة</button>
     </div>
     <div class="schedule-list" id="schedule-list">
@@ -762,8 +796,8 @@ document.addEventListener('keydown', e => {
         <div class="prog-body">
           <!-- Weekly schedule tabs -->
           <div style="display:flex;gap:4px;margin-bottom:.75rem;flex-wrap:wrap;">
-            <button onclick="showSamar('schedule',this)" class="samar-btn samar-active">📅 الجدول</button>
-            <button onclick="showSamar('criteria',this)" class="samar-btn">🏆 التقييم</button>
+            <button onclick="showSamar('schedule',this)" class="samar-btn samar-active">الجدول</button>
+            <button onclick="showSamar('criteria',this)" class="samar-btn">التقييم</button>
             <button onclick="showSamar('types',this)" class="samar-btn">🎪 الفقرات</button>
           </div>
 
@@ -1088,7 +1122,7 @@ function showSamar(tab, btn) {
     معسكر المعيصم ( ١ ) – وزارة الرياضة السعودية – موسم الحج 1447هـ
   </div>
   <div class="footer-credit">
-    تصميم الموقع: <span>فرقة جازان هاني – م.المهند حمدي &nbsp;|&nbsp; <a href="https://wa.me/966599746324" target="_blank" style="color:#25d366;text-decoration:none;font-weight:700">💬 واتساب</a></span>
+    تصميم الموقع: <span>فرقة جازان هاني – م.المهند حمدي &nbsp;|&nbsp; <a href="https://wa.me/966599746324" target="_blank" style="color:#25d366;text-decoration:none;font-weight:700">واتساب</a></span>
   </div>
 </footer>
 
@@ -1179,11 +1213,22 @@ const sections = document.querySelectorAll('section[id]');
 window.addEventListener('scroll', () => {
   let current = '';
   sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
-  document.querySelectorAll('.nav-links a').forEach(a => {
+  document.querySelectorAll('.drawer-link:not(.svc)').forEach(a => {
     const isActive = a.getAttribute('href') === '#' + current;
     a.classList.toggle('active', isActive);
   });
 }, { passive: true });
+
+function openDrawer() {
+  document.getElementById('sideDrawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  document.getElementById('sideDrawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
 </script>
 </body>
 </html>
