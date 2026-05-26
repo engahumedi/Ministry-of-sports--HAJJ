@@ -140,7 +140,7 @@ nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify
 .eid-heading-lg{font-size:1.95rem}
 .eid-eng{font-size:.6rem;color:rgba(201,162,39,.45);letter-spacing:3px;text-align:center;margin-bottom:10px;font-weight:700}
 .eid-divider{display:flex;align-items:center;gap:6px;width:80%;margin:4px auto 12px}
-.eid-greeting{font-size:.8rem;color:rgba(255,255,255,.7);text-align:center;line-height:2;margin-bottom:16px}
+.eid-greeting{font-size:.95rem;font-weight:700;color:rgba(255,255,255,.7);text-align:center;line-height:2;margin-bottom:16px}
 
 /* Name */
 .eid-name-box{
@@ -617,7 +617,7 @@ function drawCardToCanvas(callback) {
 
     drawOrnamentLine(ctx, divdR.x, divdR.x + divdR.w, divdR.y + divdR.h/2);
 
-    ctx.font = '400 11px Tajawal, Arial'; ctx.fillStyle = 'rgba(255,255,255,.7)';
+    ctx.font = '700 13px Tajawal, Arial'; ctx.fillStyle = 'rgba(255,255,255,.7)';
     var glines = ['أهنئكم بمناسبة حلول','عيد الأضحى المبارك','أعاده الله علينا وعليكم باليمن والبركات','وكل عام وأنتم بخير'];
     var glh = greetR.h / glines.length;
     glines.forEach(function(ln, i) { ctx.fillText(ln, cx, greetR.y + glh*(i+0.78)); });
