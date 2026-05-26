@@ -366,6 +366,21 @@ footer { background:var(--g1); padding:2.5rem 2rem; text-align:center; }
 .drawer-link.svc{color:#c9a227;font-weight:700;background:rgba(201,162,39,.07);border-right:3px solid rgba(201,162,39,.5)}
 .drawer-link.svc:hover{background:rgba(201,162,39,.15)}
 
+/* ── Weather Widget ── */
+.weather-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:1.5rem}
+.weather-card{background:rgba(255,255,255,.06);border:1px solid rgba(201,162,39,.2);border-radius:20px;padding:1.5rem;text-align:center}
+.weather-icon{font-size:2.2rem;margin-bottom:.4rem;display:block}
+.weather-temp{font-size:2.2rem;font-weight:900;color:var(--gold2)}
+.weather-feels{font-size:.75rem;color:rgba(255,255,255,.45)}
+.weather-desc{font-size:.9rem;color:rgba(255,255,255,.75);margin:.4rem 0}
+.weather-hum{font-size:.75rem;color:rgba(255,255,255,.45)}
+.uv-number{font-size:2.4rem;font-weight:900}
+.uv-bar-wrap{height:10px;border-radius:10px;background:rgba(255,255,255,.1);margin:.6rem 0;overflow:hidden}
+.uv-bar{height:100%;border-radius:10px;transition:width .8s}
+.uv-label{font-size:.85rem;font-weight:700;margin:.3rem 0}
+.uv-advice{font-size:.78rem;color:rgba(255,255,255,.6)}
+.weather-loading{color:rgba(255,255,255,.3);font-size:.85rem;padding:1.5rem 0}
+
 </style>
 </head>
 <body>
@@ -509,6 +524,13 @@ footer { background:var(--g1); padding:2.5rem 2rem; text-align:center; }
         <div class="stat-sub">بمعدل 3 غرف لكل جناح</div>
       </div>
     </div>
+
+    <!-- Weather Widget -->
+    <div class="weather-grid">
+      <div class="weather-card" id="w-temp"><div class="weather-loading">جارٍ تحميل الطقس…</div></div>
+      <div class="weather-card" id="w-uv"><div class="weather-loading">…</div></div>
+    </div>
+
   </div>
 </section>
 
@@ -1230,6 +1252,52 @@ function closeDrawer() {
   document.getElementById('drawerOverlay').classList.remove('open');
   document.body.style.overflow = '';
 }
+
+// ── Weather Widget ──────────────────────────────────────
+(function() {
+  var WMO = {
+    0:'صحو تام|☀️',1:'صافٍ|☀️',2:'غائم جزئياً|🌤️',3:'غائم|🌥️',
+    45:'ضبابي|🌫️',48:'ضبابي|🌫️',
+    51:'رذاذ خفيف|🌦️',53:'رذاذ|🌦️',55:'رذاذ كثيف|🌦️',
+    61:'مطر خفيف|🌧️',63:'مطر|🌧️',65:'مطر غزير|🌧️',
+    80:'زخات|🌦️',81:'زخات|🌦️',82:'زخات غزيرة|⛈️',95:'عاصفة رعدية|⛈️'
+  };
+  var UV_DATA = [
+    {max:2, color:'#43a047',label:'منخفض',     advice:'لا داعي لواقي الشمس'},
+    {max:5, color:'#fdd835',label:'معتدل',     advice:'يُفضّل واقي شمس SPF 30'},
+    {max:7, color:'#fb8c00',label:'مرتفع',     advice:'واقي شمس SPF 30+ ضروري'},
+    {max:10,color:'#e53935',label:'مرتفع جداً',advice:'واقي شمس SPF 50+ إلزامي'},
+    {max:99,color:'#8e24aa',label:'خطير',      advice:'تجنّب الشمس المباشرة'}
+  ];
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=21.4225&longitude=39.8933' +
+        '&current=temperature_2m,apparent_temperature,relative_humidity_2m,uv_index,weathercode' +
+        '&timezone=Asia%2FRiyadh')
+    .then(function(r){ return r.json(); })
+    .then(function(d) {
+      var c = d.current;
+      var wmo = WMO[c.weathercode] || WMO[Math.floor(c.weathercode/10)*10] || 'صحو تام|☀️';
+      var p = wmo.split('|');
+      document.getElementById('w-temp').innerHTML =
+        '<span class="weather-icon">' + p[1] + '</span>' +
+        '<div class="weather-temp">' + Math.round(c.temperature_2m) + '°C</div>' +
+        '<div class="weather-feels">يُحسّ بها ' + Math.round(c.apparent_temperature) + '°C</div>' +
+        '<div class="weather-desc">' + p[0] + '</div>' +
+        '<div class="weather-hum">💧 رطوبة ' + c.relative_humidity_2m + '%</div>';
+      var uv   = Math.round(c.uv_index);
+      var info = UV_DATA.find(function(x){ return uv <= x.max; }) || UV_DATA[4];
+      var pct  = Math.min(uv / 11 * 100, 100).toFixed(0);
+      document.getElementById('w-uv').innerHTML =
+        '<span class="weather-icon">🌞</span>' +
+        '<div class="uv-number" style="color:' + info.color + '">' + uv + '</div>' +
+        '<div class="uv-bar-wrap"><div class="uv-bar" style="width:' + pct + '%;background:' + info.color + '"></div></div>' +
+        '<div class="uv-label" style="color:' + info.color + '">' + info.label + '</div>' +
+        '<div class="uv-advice">🧴 ' + info.advice + '</div>';
+    })
+    .catch(function() {
+      document.getElementById('w-temp').innerHTML = '';
+      document.getElementById('w-uv').innerHTML   = '';
+    });
+})();
 </script>
 </body>
 </html>
