@@ -35,12 +35,20 @@ function doPost(e) {
     if (data.action !== 'add') return out({error:'unknown action'});
 
     var sheet = getSheet();
-    var now = new Date();
-    var id   = now.getTime();
+    var now   = new Date();
+    // Use frontend-provided id/ts so local and server ids always match
+    var id    = String(data.id || now.getTime());
+    var ts    = data.ts || now.toISOString();
+
+    // Prevent duplicate rows (same id already in sheet)
+    var vals = sheet.getDataRange().getValues();
+    for (var i = 1; i < vals.length; i++) {
+      if (String(vals[i][0]) === id) return out({ok: true, id: id, dup: true});
+    }
 
     sheet.appendRow([
       id,
-      now.toISOString(),
+      ts,
       data.monitorEmail || '',
       data.zone         || '',
       data.camp         || '',
@@ -134,7 +142,9 @@ function getRows(filterFn) {
   var result = [];
   vals.slice(1).forEach(function(row) {
     var rec = {};
-    COLS.forEach(function(col, i){ rec[col] = row[i] || ''; });
+    COLS.forEach(function(col, i){ rec[col] = row[i] !== undefined ? row[i] : ''; });
+    // Always return id as string to avoid float notation for large timestamps
+    if (rec.id) rec.id = String(rec.id);
     if (rec.id && filterFn(rec)) result.push(rec);
   });
   return result;
