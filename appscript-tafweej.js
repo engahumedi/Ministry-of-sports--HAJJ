@@ -11,11 +11,11 @@
  * 4. انسخ رابط الـ Web App والصقه في صفحة المشرف بـ tafweej.html
  */
 
-// Passwords stored in Script Properties only — never hardcoded here
-// Setup: GAS → Project Settings → Script Properties → add ADMIN_PASS, MON_PASS, ADMIN_EMAIL
+// MON_PASS: fallback to default so monitors work immediately
+// ADMIN_PASS: must be set in Script Properties (Project Settings → Script Properties)
 var _p         = PropertiesService.getScriptProperties();
+var MON_PASS    = _p.getProperty('MON_PASS')   || 'Aa@12345678';
 var ADMIN_PASS  = _p.getProperty('ADMIN_PASS');
-var MON_PASS    = _p.getProperty('MON_PASS');
 var ADMIN_EMAIL = (_p.getProperty('ADMIN_EMAIL') || '').toLowerCase();
 var SHEET_KEY   = 'TAFWEEJ_SHEET_ID';
 var COLS       = ['id','ts','monitorEmail','zone','camp','violation','notes','shift','status','lat','lng','acc','photoNote'];
