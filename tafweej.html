@@ -1016,8 +1016,36 @@ function submitReport() {
   // Send to GAS async (without photo to avoid size limits)
   if (GAS) {
     var gasRep = Object.assign({}, rep, {action:'add', photo: rep.photo ? '[image]' : ''});
-    gasPost(gasRep, function(){});
+    gasPost(gasRep, function(res) {
+      if (res && res.ok) {
+        markSynced(rep.id);
+      }
+    });
   }
+}
+
+function markSynced(id) {
+  var local = getMyLocal();
+  local.forEach(function(r){ if (String(r.id)===String(id)) r.synced = true; });
+  setMyLocal(local);
+  REPS.forEach(function(r){ if (String(r.id)===String(id)) r.synced = true; });
+  renderMonReps();
+}
+
+function retrySend(id) {
+  if (!GAS) { showToast('لا يوجد اتصال بالخادم'); return; }
+  var r = REPS.find(function(x){ return String(x.id)===String(id); });
+  if (!r) return;
+  showToast('جارٍ الإرسال…');
+  var gasRep = Object.assign({}, r, {action:'add', photo: r.photo ? '[image]' : ''});
+  gasPost(gasRep, function(res) {
+    if (res && res.ok) {
+      markSynced(id);
+      showToast('✅ تم الإرسال بنجاح');
+    } else {
+      showToast('❌ فشل الإرسال، تحقق من الاتصال');
+    }
+  });
 }
 
 // ════════════════════════════════════════
@@ -1043,8 +1071,14 @@ function loadReps(role, cb) {
   gasGet(params, function(data) {
     if (Array.isArray(data)) {
       var ids = {};
-      data.forEach(function(r){ ids[String(r.id)]=1; });
+      data.forEach(function(r){ r.synced = true; ids[String(r.id)]=1; });
       var localOnly = local.filter(function(r){ return !ids[String(r.id)]; });
+      // mark already-synced local records
+      if (role==='monitor') {
+        var savedLocal = getMyLocal();
+        savedLocal.forEach(function(r){ if (ids[String(r.id)]) r.synced=true; });
+        setMyLocal(savedLocal);
+      }
       cb(data.concat(localOnly));
     } else {
       cb(local);
@@ -1100,11 +1134,18 @@ function repItem(r) {
   var photoEl = r.photo
     ? '<img src="'+r.photo+'" class="ri-img" onclick="viewPhoto(this.src)" title="عرض الصورة">'
     : '';
+  var syncEl = '';
+  if (ROLE === 'monitor') {
+    syncEl = r.synced
+      ? '<span style="font-size:.7rem;color:#43a047">☁️ مُزامن</span>'
+      : '<span style="font-size:.7rem;color:#fb8c00;cursor:pointer" onclick="retrySend(\''+r.id+'\')">⏳ معلق — اضغط للإرسال</span>';
+  }
   return '<div class="ri">' +
     '<div class="ri-l">' +
       '<div class="ri-v">'+vbadge(r.violation)+'</div>' +
       '<div class="ri-m">🏕️ '+r.camp+' &nbsp;|&nbsp; '+gpsLink+fmtTs(r.ts)+'</div>' +
       (r.notes ? '<div class="ri-note">'+r.notes+'</div>' : '') +
+      syncEl +
     '</div>' +
     '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex-shrink:0">' +
       sbadge(r.status,r.id) +
