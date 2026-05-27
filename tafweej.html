@@ -52,7 +52,7 @@ body{font-family:'Tajawal',Arial,sans-serif;background:var(--bg);color:var(--tex
 .rbadge.mon{background:var(--gold);color:#1a3a10}
 .rbadge.sup{background:#1e88e5;color:#fff}
 .rbadge.adm{background:#e53935;color:#fff}
-.htitle h1{font-size:.95rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.htitle h1{font-size:.88rem;font-weight:700;color:var(--text);max-width:55vw;word-break:break-word;line-height:1.3}
 .hacts{display:flex;align-items:center;gap:.6rem}
 .huser{font-size:.75rem;color:var(--t2);background:rgba(255,255,255,.07);
   padding:.28rem .7rem;border-radius:7px;white-space:nowrap}
@@ -201,7 +201,7 @@ body{font-family:'Tajawal',Arial,sans-serif;background:var(--bg);color:var(--tex
 @media(max-width:480px){
   .amain{padding:.9rem}
   .srow{grid-template-columns:repeat(2,1fr)}
-  .htitle h1{max-width:130px}
+  .htitle h1{max-width:52vw}
   .huser{display:none}
 }
 </style>
@@ -236,6 +236,7 @@ body{font-family:'Tajawal',Arial,sans-serif;background:var(--bg);color:var(--tex
     </div>
     <div class="hacts">
       <span class="huser" id="mon-email">—</span>
+      <button class="btn bo" id="mon-refresh" onclick="refreshMon()">🔄</button>
       <button class="btn bo" onclick="logout()">خروج</button>
     </div>
   </div>
@@ -257,6 +258,7 @@ body{font-family:'Tajawal',Arial,sans-serif;background:var(--bg);color:var(--tex
     </div>
     <div class="hacts">
       <span class="huser" id="sup-email">—</span>
+      <button class="btn bo" id="sup-refresh" onclick="refreshSup()">🔄</button>
       <button class="btn bo" onclick="logout()">خروج</button>
     </div>
   </div>
@@ -542,7 +544,7 @@ function initSup() {
   document.getElementById('sup-name').textContent  = sup.n;
   document.getElementById('sup-email').textContent = CU.email.split('@')[0].toUpperCase() + ' | ' + SHIFT;
 
-  var myMons = MONS.filter(function(m){ return sup.z.indexOf(m.z) !== -1; });
+  var myMons = MONS.filter(function(m){ return sup.z.indexOf(m.z) !== -1 && m.s === sup.s; });
 
   // Populate monitor filter
   var sfm = document.getElementById('sf-m');
@@ -561,6 +563,31 @@ function initSup() {
     renderSupStats(myMons, rs);
     renderSupMonList(myMons, rs);
     renderSupTable();
+  });
+}
+
+function refreshSup() {
+  var btn = document.getElementById('sup-refresh');
+  btn.textContent = '⏳'; btn.disabled = true;
+  var sup = CU.data;
+  var myMons = MONS.filter(function(m){ return sup.z.indexOf(m.z)!==-1 && m.s===sup.s; });
+  loadReps('supervisor', function(rs) {
+    REPS = rs;
+    renderSupStats(myMons, rs);
+    renderSupMonList(myMons, rs);
+    renderSupTable();
+    btn.textContent = '🔄'; btn.disabled = false;
+  });
+}
+
+function refreshMon() {
+  var btn = document.getElementById('mon-refresh');
+  btn.textContent = '⏳'; btn.disabled = true;
+  loadReps('monitor', function(rs) {
+    REPS = rs;
+    renderMonStats();
+    renderMonReps();
+    btn.textContent = '🔄'; btn.disabled = false;
   });
 }
 
@@ -699,7 +726,7 @@ function renderAdmTable() {
     var sOk  = true;
     if (fSup) {
       var mon = MONS.find(function(m){ return m.e===r.monitorEmail; });
-      var sup = mon ? SUPS.find(function(s){ return s.z.indexOf(mon.z)!==-1; }) : null;
+      var sup = mon ? SUPS.find(function(s){ return s.z.indexOf(mon.z)!==-1 && s.s===mon.s; }) : null;
       sOk = !!(sup && sup.e===fSup);
     }
     return vOk && stOk && sOk;
@@ -816,7 +843,7 @@ function deleteRep(id, role) {
   // Re-render
   if (role==='supervisor') {
     var sup = CU.data;
-    var myMons = MONS.filter(function(m){ return sup.z.indexOf(m.z)!==-1; });
+    var myMons = MONS.filter(function(m){ return sup.z.indexOf(m.z)!==-1 && m.s===sup.s; });
     renderSupStats(myMons, REPS);
     renderSupMonList(myMons, REPS);
     renderSupTable();
