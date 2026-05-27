@@ -72,6 +72,37 @@ function doGet(e) {
   var action = (e.parameter.action || 'list').trim();
   var pass   = (e.parameter.pass   || '').trim();
 
+  // ── add via GET (avoids POST/CORS/redirect issues on mobile) ──
+  if (action === 'add') {
+    if (pass !== MON_PASS && pass !== ADMIN_PASS) return out({error:'unauthorized'});
+    var sheet = getSheet();
+    var now   = new Date();
+    var id    = String(e.parameter.id || now.getTime());
+    var ts    = e.parameter.ts || now.toISOString();
+
+    // Prevent duplicate rows
+    var vals = sheet.getDataRange().getValues();
+    for (var i = 1; i < vals.length; i++) {
+      if (String(vals[i][0]) === id) return out({ok: true, id: id, dup: true});
+    }
+
+    sheet.appendRow([
+      id, ts,
+      e.parameter.monitorEmail || '',
+      e.parameter.zone         || '',
+      e.parameter.camp         || '',
+      e.parameter.violation    || '',
+      e.parameter.notes        || '',
+      e.parameter.shift        || 'الوردية الثانية',
+      'مفتوح',
+      e.parameter.lat          || '',
+      e.parameter.lng          || '',
+      e.parameter.acc          || '',
+      e.parameter.photo === '[image]' ? 'يوجد صورة' : ''
+    ]);
+    return out({ok: true, id: id});
+  }
+
   // ── list (monitor sees own, admin sees all) ──
   if (action === 'list') {
     if (pass !== MON_PASS && pass !== ADMIN_PASS) return out({error:'unauthorized'});
