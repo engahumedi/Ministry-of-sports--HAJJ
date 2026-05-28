@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بطاقة المعايدة – معسكر المعيصم</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<!-- html2canvas removed – card is rendered directly via Canvas 2D API -->
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;background:#f5f5f5;color:#1a1a1a;min-height:100vh}
+
+nav{background:#0a2e18;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;border-bottom:2px solid #c9a227}
+.nav-title{font-size:1rem;font-weight:700;color:#c9a227}
+.nav-sub{font-size:.75rem;color:rgba(255,255,255,.6);margin-top:2px}
+.nav-back{color:rgba(255,255,255,.8);text-decoration:none;font-size:.85rem;border:1px solid rgba(255,255,255,.3);padding:5px 12px;border-radius:20px}
+
+.tabs-bar{display:flex;max-width:480px;margin:16px auto 0;padding:0 16px}
+.tab-btn{flex:1;padding:11px;border:none;border-radius:10px 10px 0 0;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.95rem;font-weight:700;background:#ddd;color:#555;transition:.2s}
+.tab-btn.active{background:#0a2e18;color:#c9a227}
+
+.form-card{background:#fff;border-radius:0 0 16px 16px;padding:24px;max-width:480px;margin:0 auto 24px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.section-title{font-size:1.05rem;font-weight:800;color:#0a2e18;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid #f0f0f0}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:.88rem;font-weight:700;color:#333;margin-bottom:6px}
+.field input{width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:10px;font-family:'Tajawal',sans-serif;font-size:1rem;outline:none;transition:.2s;background:#fff}
+.field input:focus{border-color:#1a6b3c;box-shadow:0 0 0 3px rgba(26,107,60,.1)}
+
+/* ── Photo Upload ── */
+.photo-upload-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;cursor:pointer}
+.photo-circle{
+  width:130px;height:130px;border-radius:50%;
+  border:2px dashed #1a6b3c;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#f9f9f9;transition:.2s;
+  background-size:cover;background-position:center;background-repeat:no-repeat;
+  overflow:hidden;
+}
+.photo-circle:hover{border-color:#c9a227}
+.photo-circle.chosen{border:3px solid #1a6b3c;border-style:solid}
+.upload-plus{font-size:2.2rem;color:#1a6b3c;line-height:1;margin-bottom:4px}
+.upload-hint{font-size:.72rem;color:#999;text-align:center;padding:0 10px}
+.photo-status{font-size:.78rem;color:#1a6b3c;font-weight:700;margin-top:8px;min-height:20px}
+
+.submit-btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#1a6b3c,#2e8b57);color:#fff;font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:800;cursor:pointer;transition:.2s;margin-top:4px}
+.submit-btn:hover{opacity:.92}
+.gold-btn{background:#c9a227;color:#0a2e18;font-weight:800;padding:12px 28px;border-radius:30px;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:1rem}
+.outline-btn{background:transparent;color:#0a2e18;font-weight:700;padding:12px 24px;border-radius:30px;border:2px solid #0a2e18;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.9rem}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+
+/* ── Crop Modal ── */
+#crop-modal{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.88);z-index:500;
+  align-items:center;justify-content:center;padding:16px;
+}
+.crop-box{
+  background:#0a2e18;border:2px solid #c9a227;border-radius:18px;
+  padding:22px 20px;width:100%;max-width:320px;
+}
+.crop-title{font-size:1rem;font-weight:800;color:#c9a227;text-align:center;margin-bottom:14px}
+.crop-hint{font-size:.75rem;color:rgba(255,255,255,.45);text-align:center;margin-top:10px;margin-bottom:16px}
+#crop-viewport{
+  width:240px;height:240px;border-radius:50%;overflow:hidden;
+  border:3px solid #c9a227;
+  box-shadow:0 0 0 5px rgba(10,46,24,1),0 0 0 8px rgba(201,162,39,.35);
+  margin:0 auto;position:relative;
+  touch-action:none;cursor:grab;user-select:none;
+  background:#051510;
+}
+#crop-viewport:active{cursor:grabbing}
+#crop-img{position:absolute;max-width:none;user-select:none;pointer-events:none;-webkit-user-drag:none}
+.crop-btns{display:flex;gap:10px;justify-content:center}
+.crop-confirm{background:#c9a227;color:#0a2e18;border:none;padding:10px 28px;border-radius:24px;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:800;cursor:pointer}
+.crop-cancel{background:transparent;color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.25);padding:10px 20px;border-radius:24px;font-family:'Tajawal',sans-serif;font-size:.9rem;cursor:pointer}
+
+/* ── EID CARD ── */
+#card-preview{display:none;margin:0 auto 32px;max-width:480px;padding:0 16px}
+
+.eid-card{
+  width:100%;max-width:380px;margin:0 auto;
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 10px 40px rgba(0,0,0,.4);
+  font-family:'Tajawal',sans-serif;
+}
+
+/* Header */
+.eid-header{
+  background:linear-gradient(180deg,#051510 0%,#0a2e18 100%);
+  border-bottom:2px solid #c9a227;
+  padding:12px 16px;text-align:center;
+}
+.eid-header-title{font-size:1.05rem;font-weight:900;color:#c9a227;letter-spacing:.3px}
+.eid-header-sub{font-size:.68rem;color:rgba(201,162,39,.5);letter-spacing:.6px;margin-top:1px}
+
+/* Body */
+.eid-body{display:flex;align-items:stretch}
+
+/* Decorative arabesque columns – Islamic geometric lattice (double-star + connectors) */
+.eid-col{
+  width:46px;flex-shrink:0;
+  background-color:#061a0e;
+  background-image:
+    url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc0MCcgaGVpZ2h0PSc0MCc+PHJlY3Qgd2lkdGg9JzQwJyBoZWlnaHQ9JzQwJyBmaWxsPScjMDYxYTBlJy8+PGxpbmUgeDE9JzMyLjQnIHkxPSczMi40JyB4Mj0nNDAnIHkyPSc0MCcgc3Ryb2tlPScjYzlhMjI3OTgnIHN0cm9rZS13aWR0aD0nMScvPjxsaW5lIHgxPSc3LjYnIHkxPSczMi40JyB4Mj0nMCcgeTI9JzQwJyBzdHJva2U9JyNjOWEyMjc5OCcgc3Ryb2tlLXdpZHRoPScxJy8+PGxpbmUgeDE9JzcuNicgeTE9JzcuNicgeDI9JzAnIHkyPScwJyBzdHJva2U9JyNjOWEyMjc5OCcgc3Ryb2tlLXdpZHRoPScxJy8+PGxpbmUgeDE9JzMyLjQnIHkxPSc3LjYnIHgyPSc0MCcgeTI9JzAnIHN0cm9rZT0nI2M5YTIyNzk4JyBzdHJva2Utd2lkdGg9JzEnLz48bGluZSB4MT0nMzcuNScgeTE9JzIwJyB4Mj0nNDAnIHkyPScyMCcgc3Ryb2tlPScjYzlhMjI3OTgnIHN0cm9rZS13aWR0aD0nMScvPjxsaW5lIHgxPScyMCcgeTE9JzM3LjUnIHgyPScyMCcgeTI9JzQwJyBzdHJva2U9JyNjOWEyMjc5OCcgc3Ryb2tlLXdpZHRoPScxJy8+PGxpbmUgeDE9JzIuNScgeTE9JzIwJyB4Mj0nMCcgeTI9JzIwJyBzdHJva2U9JyNjOWEyMjc5OCcgc3Ryb2tlLXdpZHRoPScxJy8+PGxpbmUgeDE9JzIwJyB5MT0nMi41JyB4Mj0nMjAnIHkyPScwJyBzdHJva2U9JyNjOWEyMjc5OCcgc3Ryb2tlLXdpZHRoPScxJy8+PHBvbHlnb24gcG9pbnRzPSczNy41LDIwIDI2LjY1LDIyLjc0IDMyLjM3LDMyLjM3IDIyLjc0LDI2LjY1IDIwLDM3LjUgMTcuMjYsMjYuNjUgNy42MywzMi4zNyAxMy4zNSwyMi43NCAyLjUsMjAgMTMuMzUsMTcuMjYgNy42Myw3LjYzIDE3LjI2LDEzLjM1IDIwLDIuNSAyMi43NCwxMy4zNSAzMi4zNyw3LjYzIDI2LjY1LDE3LjI2JyBmaWxsPScjYzlhMjI3MTInIHN0cm9rZT0nI2M5YTIyN2NjJyBzdHJva2Utd2lkdGg9JzEuMScgc3Ryb2tlLWxpbmVqb2luPSdtaXRlcicvPjxwb2x5Z29uIHBvaW50cz0nMzMuNjUsMjAgMjUuMTksMjIuMTQgMjkuNjUsMjkuNjUgMjIuMTQsMjUuMTkgMjAsMzMuNjUgMTcuODYsMjUuMTkgMTAuMzUsMjkuNjUgMTQuODEsMjIuMTQgNi4zNSwyMCAxNC44MSwxNy44NiAxMC4zNSwxMC4zNSAxNy44NiwxNC44MSAyMCw2LjM1IDIyLjE0LDE0LjgxIDI5LjY1LDEwLjM1IDI1LjE5LDE3Ljg2JyBmaWxsPSdub25lJyBzdHJva2U9JyNjOWEyMjc3NScgc3Ryb2tlLXdpZHRoPScuNzUnIHN0cm9rZS1saW5lam9pbj0nbWl0ZXInLz48Y2lyY2xlIGN4PScyMCcgY3k9JzIwJyByPScyLjUnIGZpbGw9JyNjOWEyMjdlOCcvPjwvc3ZnPg==");
+  background-size: 40px 40px;
+  background-repeat: repeat;
+}
+.eid-col-r{border-left:1.5px solid rgba(201,162,39,.4)}
+.eid-col-l{border-right:1.5px solid rgba(201,162,39,.4)}
+
+/* Center */
+.eid-center{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:20px 14px 18px;
+  background:radial-gradient(ellipse at 50% 20%,#0e3d20 0%,#0a2e18 65%);
+}
+
+/* Photo */
+.eid-photo-wrap{margin-bottom:14px}
+.eid-photo{
+  width:120px;height:120px;border-radius:50%;
+  border:3px solid #c9a227;
+  box-shadow:0 0 0 4px #0a2e18,0 0 0 8px rgba(201,162,39,.4);
+  background:#0d3820;
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+.eid-photo img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+
+/* Ornament */
+.eid-ornament{display:flex;align-items:center;gap:6px;width:92%;margin-bottom:10px}
+.eid-orn-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(201,162,39,.8),transparent)}
+.eid-orn-dot{width:6px;height:6px;background:#c9a227;border-radius:50%;flex-shrink:0}
+
+/* Text */
+.eid-heading{
+  font-size:1.5rem;font-weight:900;color:#c9a227;
+  text-align:center;letter-spacing:.5px;line-height:1.2;
+  text-shadow:0 2px 12px rgba(0,0,0,.7);margin-bottom:3px;
+}
+.eid-heading-lg{font-size:1.95rem}
+.eid-eng{font-size:.6rem;color:rgba(201,162,39,.45);letter-spacing:3px;text-align:center;margin-bottom:10px;font-weight:700}
+.eid-divider{display:flex;align-items:center;gap:6px;width:80%;margin:4px auto 12px}
+.eid-greeting{font-size:.95rem;font-weight:700;color:rgba(255,255,255,.7);text-align:center;line-height:2;margin-bottom:16px}
+
+/* Name */
+.eid-name-box{
+  border:1.5px solid rgba(201,162,39,.75);border-radius:8px;
+  padding:8px 24px;min-width:170px;text-align:center;
+  background:rgba(201,162,39,.07);
+}
+.eid-name{font-size:1.05rem;font-weight:900;color:#c9a227}
+
+/* ── Zoom Controls ── */
+.zoom-row{display:flex;align-items:center;gap:8px;margin:8px 0 14px}
+.zoom-btn{background:rgba(201,162,39,.15);border:1px solid rgba(201,162,39,.5);color:#c9a227;width:32px;height:32px;border-radius:50%;font-size:1.4rem;line-height:1;cursor:pointer;font-family:'Tajawal',sans-serif;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding-bottom:1px}
+.zoom-btn:active{background:rgba(201,162,39,.3)}
+.zoom-slider{flex:1;-webkit-appearance:none;appearance:none;height:4px;border-radius:4px;background:rgba(201,162,39,.25);outline:none;cursor:pointer}
+.zoom-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#c9a227;cursor:pointer}
+.zoom-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#c9a227;cursor:pointer;border:none}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;right:16px;left:16px;max-width:400px;margin:auto;background:#0a2e18;color:#fff;padding:12px 18px;border-radius:10px;font-size:.9rem;text-align:center;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none}
+.toast.show{opacity:1}
+.toast.err{background:#c62828}
+.toast.ok{background:#1a6b3c}
+</style>
+</head>
+<body>
+
+<nav>
+  <div>
+    <div class="nav-title">بطاقة المعايدة</div>
+    <div class="nav-sub">عيد الأضحى المبارك 1447هـ</div>
+  </div>
+  <a href="index.html" class="nav-back">← الرئيسية</a>
+</nav>
+
+<!-- ── Crop Modal ── -->
+<div id="crop-modal">
+  <div class="crop-box">
+    <div class="crop-title">حدد الجزء الذي يظهر في الإطار</div>
+    <div id="crop-viewport">
+      <img id="crop-img" draggable="false" alt="">
+    </div>
+    <div class="crop-hint">اسحب لتحريك • قرّب وبعّد بإصبعين أو بالشريط</div>
+    <div class="zoom-row">
+      <button class="zoom-btn" onclick="changeZoom(-0.15)">−</button>
+      <input type="range" id="zoom-slider" class="zoom-slider" min="80" max="500" value="100" step="5" oninput="setZoomSlider(this.value)">
+      <button class="zoom-btn" onclick="changeZoom(0.15)">+</button>
+    </div>
+    <div class="crop-btns">
+      <button class="crop-confirm" onclick="confirmCrop()">تأكيد</button>
+      <button class="crop-cancel"  onclick="cancelCrop()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" id="tb-photo" onclick="switchTab('photo')">مع الصورة</button>
+  <button class="tab-btn"        id="tb-text"  onclick="switchTab('text')">بدون صورة</button>
+</div>
+
+<!-- ── تبويب مع الصورة ── -->
+<div id="tab-photo">
+  <div class="form-card">
+    <div class="section-title">بطاقة معايدة مع صورتك الشخصية</div>
+    <div class="photo-upload-wrap" onclick="document.getElementById('photo-file').click()">
+      <div class="photo-circle" id="photo-circle">
+        <div class="upload-plus">+</div>
+        <div class="upload-hint">اضغط لاختيار صورتك</div>
+      </div>
+      <div class="photo-status" id="photo-status"></div>
+    </div>
+    <input type="file" id="photo-file" accept="image/*" style="display:none">
+    <div class="field">
+      <label>اسمك الكريم</label>
+      <input id="f-name-photo" type="text" placeholder="اكتب اسمك هنا">
+    </div>
+    <button class="submit-btn" onclick="generateCard('photo')">توليد البطاقة</button>
+  </div>
+</div>
+
+<!-- ── تبويب بدون صورة ── -->
+<div id="tab-text" style="display:none">
+  <div class="form-card">
+    <div class="section-title">بطاقة معايدة بالاسم فقط</div>
+    <div class="field">
+      <label>اسمك الكريم</label>
+      <input id="f-name-text" type="text" placeholder="اكتب اسمك هنا">
+    </div>
+    <button class="submit-btn" onclick="generateCard('text')">توليد البطاقة</button>
+  </div>
+</div>
+
+<!-- ── معاينة البطاقة ── -->
+<div id="card-preview">
+  <div class="eid-card" id="the-card">
+
+    <div class="eid-header">
+      <div class="eid-header-sub">موسم الحج 1447هـ</div>
+      <div class="eid-header-sub" style="color:rgba(201,162,39,.65)">وزارة الرياضة</div>
+    </div>
+
+    <div class="eid-body">
+      <div class="eid-col eid-col-r"></div>
+      <div class="eid-center">
+
+        <div class="eid-photo-wrap" id="eid-photo-wrap">
+          <div class="eid-photo" id="eid-photo"><img id="eid-photo-img" src="" alt="" style="display:none"></div>
+        </div>
+
+        <div class="eid-ornament" id="eid-ornament" style="display:none">
+          <div class="eid-orn-line"></div>
+          <div class="eid-orn-dot"></div>
+          <div class="eid-orn-line"></div>
+        </div>
+
+        <div class="eid-heading" id="eid-heading">عيد أضحى<br>مبارك</div>
+        <div class="eid-eng">EID AL-ADHA MUBARAK</div>
+
+        <div class="eid-divider">
+          <div class="eid-orn-line"></div>
+          <div class="eid-orn-dot"></div>
+          <div class="eid-orn-line"></div>
+        </div>
+
+        <div class="eid-greeting">
+          أهنئكم بمناسبة حلول<br>
+          عيد الأضحى المبارك<br>
+          أعاده الله علينا وعليكم باليمن والبركات<br>
+          وكل عام وأنتم بخير
+        </div>
+
+        <div class="eid-name-box">
+          <div class="eid-name" id="c-name">—</div>
+        </div>
+
+      </div>
+      <div class="eid-col eid-col-l"></div>
+    </div>
+
+  </div>
+
+  <div class="btn-row">
+    <button class="gold-btn"    onclick="saveCard()">حفظ كصورة</button>
+    <button class="outline-btn" onclick="resetForm()">تعديل البيانات</button>
+  </div>
+  <p style="text-align:center;font-size:.78rem;color:#aaa;margin:10px 0 8px">اضغط "حفظ كصورة" لتنزيل البطاقة على جوالك</p>
+</div>
+
+<footer style="text-align:center;padding:28px 16px 40px;font-family:'Tajawal',sans-serif;background:#fff;border-top:2px solid #e8f5e9;margin-top:8px">
+  <div style="font-size:.85rem;color:#888;margin-bottom:6px">تصميم وبرمجة</div>
+  <div style="font-size:1.2rem;font-weight:900;color:#0a2e18">القائد / م.المهند حمدي</div>
+  <a href="https://wa.me/966599746324" target="_blank" style="display:inline-block;margin-top:8px;background:#25d366;color:#fff;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;padding:8px 22px;border-radius:30px;text-decoration:none">تواصل واتساب</a>
+  <div style="width:48px;height:3px;background:#c9a227;border-radius:4px;margin:12px auto 0"></div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var photoDataUrl = null;
+var cropX = 0, cropY = 0;
+var dragStartX = 0, dragStartY = 0;
+var isDragging = false;
+var CROP_SIZE = 240;
+var zoomFactor = 1, baseW = 0, baseH = 0;
+var activePointers = {};
+var pinchInitDist = 0, pinchInitZoom = 1;
+
+// ── File input ──────────────────────────────────────────
+document.getElementById('photo-file').addEventListener('change', function(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) { openCropper(ev.target.result); };
+  reader.readAsDataURL(file);
+  // reset so same file can be re-selected
+  e.target.value = '';
+});
+
+// ── Cropper ─────────────────────────────────────────────
+function openCropper(dataUrl) {
+  var modal = document.getElementById('crop-modal');
+  var img   = document.getElementById('crop-img');
+  cropX = 0; cropY = 0; zoomFactor = 1; activePointers = {};
+  img.src = dataUrl;
+  img.onload = function() {
+    var scale = Math.max(CROP_SIZE / img.naturalWidth, CROP_SIZE / img.naturalHeight) * 1.05;
+    baseW = img.naturalWidth  * scale;
+    baseH = img.naturalHeight * scale;
+    img.style.width  = baseW + 'px';
+    img.style.height = baseH + 'px';
+    cropX = (CROP_SIZE - baseW) / 2;
+    cropY = (CROP_SIZE - baseH) / 2;
+    var sl = document.getElementById('zoom-slider');
+    if (sl) sl.value = 100;
+    applyCropPos();
+  };
+  modal.style.display = 'flex';
+}
+
+function applyCropPos() {
+  var img = document.getElementById('crop-img');
+  var w = parseFloat(img.style.width)  || CROP_SIZE;
+  var h = parseFloat(img.style.height) || CROP_SIZE;
+  if (cropX > 0) cropX = 0;
+  if (cropY > 0) cropY = 0;
+  if (cropX < CROP_SIZE - w) cropX = CROP_SIZE - w;
+  if (cropY < CROP_SIZE - h) cropY = CROP_SIZE - h;
+  img.style.left = cropX + 'px';
+  img.style.top  = cropY + 'px';
+}
+
+function setZoom(factor) {
+  factor = Math.max(0.8, Math.min(5, factor));
+  var img  = document.getElementById('crop-img');
+  var prevW = parseFloat(img.style.width)  || baseW;
+  var prevH = parseFloat(img.style.height) || baseH;
+  var newW = baseW * factor;
+  var newH = baseH * factor;
+  cropX += (prevW - newW) / 2;
+  cropY += (prevH - newH) / 2;
+  img.style.width  = newW + 'px';
+  img.style.height = newH + 'px';
+  zoomFactor = factor;
+  applyCropPos();
+  var sl = document.getElementById('zoom-slider');
+  if (sl) sl.value = Math.round(factor * 100);
+}
+function changeZoom(delta) { setZoom(zoomFactor + delta); }
+function setZoomSlider(val) { setZoom(val / 100); }
+
+var vp = document.getElementById('crop-viewport');
+vp.addEventListener('pointerdown', function(e) {
+  activePointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+  var ids = Object.keys(activePointers);
+  if (ids.length === 1) {
+    isDragging = true;
+    dragStartX = e.clientX - cropX;
+    dragStartY = e.clientY - cropY;
+    vp.setPointerCapture(e.pointerId);
+  } else if (ids.length === 2) {
+    isDragging = false;
+    var pts = Object.values(activePointers);
+    pinchInitDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    pinchInitZoom = zoomFactor;
+  }
+  e.preventDefault();
+}, { passive: false });
+
+vp.addEventListener('pointermove', function(e) {
+  if (!activePointers[e.pointerId]) return;
+  activePointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+  var ids = Object.keys(activePointers);
+  if (ids.length >= 2) {
+    var pts = Object.values(activePointers);
+    var dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    if (pinchInitDist > 0) setZoom(pinchInitZoom * (dist / pinchInitDist));
+  } else if (isDragging) {
+    cropX = e.clientX - dragStartX;
+    cropY = e.clientY - dragStartY;
+    applyCropPos();
+  }
+  e.preventDefault();
+}, { passive: false });
+
+vp.addEventListener('pointerup', function(e) {
+  delete activePointers[e.pointerId];
+  if (Object.keys(activePointers).length === 0) isDragging = false;
+});
+vp.addEventListener('pointercancel', function(e) {
+  delete activePointers[e.pointerId];
+  if (Object.keys(activePointers).length === 0) isDragging = false;
+});
+
+function confirmCrop() {
+  var img = document.getElementById('crop-img');
+  var S   = 2;
+  var canvas = document.createElement('canvas');
+  canvas.width  = CROP_SIZE * S;
+  canvas.height = CROP_SIZE * S;
+  var ctx = canvas.getContext('2d');
+  ctx.beginPath();
+  ctx.arc(CROP_SIZE * S / 2, CROP_SIZE * S / 2, CROP_SIZE * S / 2, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.drawImage(img,
+    cropX * S, cropY * S,
+    parseFloat(img.style.width)  * S,
+    parseFloat(img.style.height) * S
+  );
+  photoDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+  var circle = document.getElementById('photo-circle');
+  circle.style.backgroundImage = 'url(' + photoDataUrl + ')';
+  circle.classList.add('chosen');
+  circle.innerHTML = '';
+  document.getElementById('photo-status').textContent = 'تم اختيار الصورة';
+  activePointers = {}; isDragging = false;
+  document.getElementById('crop-modal').style.display = 'none';
+}
+
+function cancelCrop() {
+  activePointers = {}; isDragging = false;
+  document.getElementById('crop-modal').style.display = 'none';
+}
+
+// ── Tabs ────────────────────────────────────────────────
+function switchTab(t) {
+  document.getElementById('tab-photo').style.display = t === 'photo' ? '' : 'none';
+  document.getElementById('tab-text').style.display  = t === 'text'  ? '' : 'none';
+  document.getElementById('tb-photo').className = 'tab-btn' + (t === 'photo' ? ' active' : '');
+  document.getElementById('tb-text').className  = 'tab-btn' + (t === 'text'  ? ' active' : '');
+  document.getElementById('card-preview').style.display = 'none';
+}
+
+// ── Generate ────────────────────────────────────────────
+function generateCard(mode) {
+  var name = document.getElementById(mode === 'photo' ? 'f-name-photo' : 'f-name-text').value.trim();
+  if (mode === 'photo' && !photoDataUrl) return showToast('اختر صورتك أولاً', 'err');
+  if (!name) return showToast('اكتب اسمك الكريم', 'err');
+
+  document.getElementById('c-name').textContent = name;
+
+  var photoWrap = document.getElementById('eid-photo-wrap');
+  var ornament  = document.getElementById('eid-ornament');
+  var heading   = document.getElementById('eid-heading');
+
+  if (mode === 'photo') {
+    photoWrap.style.display = '';
+    ornament.style.display  = 'none';
+    heading.className = 'eid-heading';
+    heading.innerHTML = 'عيد أضحى<br>مبارك';
+    var pi = document.getElementById('eid-photo-img');
+    pi.src = photoDataUrl; pi.style.display = 'block';
+  } else {
+    photoWrap.style.display = 'none';
+    ornament.style.display  = 'flex';
+    heading.className = 'eid-heading eid-heading-lg';
+    heading.innerHTML = 'عيد أضحى<br>مبارك';
+  }
+
+  document.getElementById('card-preview').style.display = 'block';
+  document.getElementById('card-preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Canvas 2D helpers ───────────────────────────────────
+function rrect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  if (ctx.roundRect) { ctx.roundRect(x, y, w, h, r); return; }
+  ctx.moveTo(x+r, y); ctx.lineTo(x+w-r, y);
+  ctx.quadraticCurveTo(x+w, y, x+w, y+r); ctx.lineTo(x+w, y+h-r);
+  ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h); ctx.lineTo(x+r, y+h);
+  ctx.quadraticCurveTo(x, y+h, x, y+h-r); ctx.lineTo(x, y+r);
+  ctx.quadraticCurveTo(x, y, x+r, y); ctx.closePath();
+}
+
+function drawStarTile(ctx, tx, ty) {
+  ctx.save(); ctx.translate(tx, ty);
+  var o=[[37.5,20],[26.65,22.74],[32.37,32.37],[22.74,26.65],[20,37.5],[17.26,26.65],[7.63,32.37],[13.35,22.74],[2.5,20],[13.35,17.26],[7.63,7.63],[17.26,13.35],[20,2.5],[22.74,13.35],[32.37,7.63],[26.65,17.26]];
+  ctx.beginPath(); o.forEach(function(p,i){i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);}); ctx.closePath();
+  ctx.fillStyle='rgba(201,162,39,.07)'; ctx.fill();
+  ctx.strokeStyle='rgba(201,162,39,.8)'; ctx.lineWidth=1.1; ctx.stroke();
+  var n=[[33.65,20],[25.19,22.14],[29.65,29.65],[22.14,25.19],[20,33.65],[17.86,25.19],[10.35,29.65],[14.81,22.14],[6.35,20],[14.81,17.86],[10.35,10.35],[17.86,14.81],[20,6.35],[22.14,14.81],[29.65,10.35],[25.19,17.86]];
+  ctx.beginPath(); n.forEach(function(p,i){i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);}); ctx.closePath();
+  ctx.strokeStyle='rgba(201,162,39,.45)'; ctx.lineWidth=0.75; ctx.stroke();
+  ctx.beginPath(); ctx.arc(20,20,2.5,0,Math.PI*2); ctx.fillStyle='rgba(201,162,39,.9)'; ctx.fill();
+  ctx.strokeStyle='rgba(201,162,39,.6)'; ctx.lineWidth=1;
+  [[32.4,32.4,40,40],[7.6,32.4,0,40],[7.6,7.6,0,0],[32.4,7.6,40,0],[37.5,20,40,20],[20,37.5,20,40],[2.5,20,0,20],[20,2.5,20,0]].forEach(function(l){
+    ctx.beginPath(); ctx.moveTo(l[0],l[1]); ctx.lineTo(l[2],l[3]); ctx.stroke();
+  });
+  ctx.restore();
+}
+
+function drawOrnamentLine(ctx, x1, x2, y) {
+  var mx=(x1+x2)/2;
+  ctx.strokeStyle='rgba(201,162,39,.8)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(mx-5,y); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(mx+5,y); ctx.lineTo(x2,y); ctx.stroke();
+  ctx.beginPath(); ctx.arc(mx,y,3,0,Math.PI*2); ctx.fillStyle='#c9a227'; ctx.fill();
+}
+
+function openImageInNewTab(canvas) {
+  var dataUrl = canvas.toDataURL('image/png');
+  var w = window.open('', '_blank');
+  if (w) {
+    w.document.write('<html dir="rtl"><head><meta name="viewport" content="width=device-width"><title>بطاقة المعايدة</title><style>body{margin:0;background:#0a2e18;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:16px;gap:14px}img{max-width:100%;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.5)}p{color:#c9a227;font-family:sans-serif;text-align:center;font-size:1rem;margin:0}</style></head><body><img src="'+dataUrl+'"><p>اضغط مطولاً على الصورة ← حفظ الصورة</p></body></html>');
+    w.document.close();
+    showToast('اضغط مطولاً على الصورة ثم "حفظ الصورة"', 'ok');
+  } else {
+    showToast('فعّل النوافذ المنبثقة ثم أعد المحاولة', 'err');
+  }
+}
+
+function drawCardToCanvas(callback) {
+  var card = document.getElementById('the-card');
+  var cardRect = card.getBoundingClientRect();
+  var W = cardRect.width, H = cardRect.height;
+
+  function rel(el) {
+    var r = el.getBoundingClientRect();
+    return { x: r.left - cardRect.left, y: r.top - cardRect.top, w: r.width, h: r.height };
+  }
+
+  var hdrR    = rel(card.querySelector('.eid-header'));
+  var colR    = rel(card.querySelector('.eid-col-r'));
+  var colL    = rel(card.querySelector('.eid-col-l'));
+  var centR   = rel(card.querySelector('.eid-center'));
+  var hndgR   = rel(document.getElementById('eid-heading'));
+  var divdR   = rel(card.querySelector('.eid-divider'));
+  var greetR  = rel(card.querySelector('.eid-greeting'));
+  var nameBoxR = rel(card.querySelector('.eid-name-box'));
+
+  var S = 4;
+  var canvas = document.createElement('canvas');
+  canvas.width  = Math.round(W * S);
+  canvas.height = Math.round(H * S);
+  var ctx = canvas.getContext('2d');
+  ctx.scale(S, S);
+
+  var cx = centR.x + centR.w / 2;
+
+  // ① Background
+  ctx.fillStyle = '#0a2e18';
+  ctx.fillRect(0, 0, W, H);
+
+  // ② Clip to card rounded rect
+  rrect(ctx, 1, 1, W-2, H-2, 13);
+  ctx.save(); ctx.clip();
+
+  // ③ Header
+  var hg = ctx.createLinearGradient(0, 0, 0, hdrR.h);
+  hg.addColorStop(0, '#051510'); hg.addColorStop(1, '#0a2e18');
+  ctx.fillStyle = hg; ctx.fillRect(0, 0, W, hdrR.h);
+  ctx.strokeStyle = '#c9a227'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(0, hdrR.h); ctx.lineTo(W, hdrR.h); ctx.stroke();
+  ctx.textAlign = 'center'; ctx.direction = 'rtl';
+  ctx.font = '700 11px Tajawal, Arial'; ctx.fillStyle = '#c9a227';
+  ctx.fillText('موسم الحج 1447هـ', W/2, hdrR.h * 0.44);
+  ctx.font = '400 10px Tajawal, Arial'; ctx.fillStyle = 'rgba(201,162,39,.5)';
+  ctx.fillText('وزارة الرياضة', W/2, hdrR.h * 0.82);
+
+  // ④ Columns
+  ctx.fillStyle = '#061a0e';
+  ctx.fillRect(colR.x, colR.y, colR.w, colR.h);
+  ctx.fillRect(colL.x, colL.y, colL.w, colL.h);
+  var tileS = 40;
+  for (var ty = hdrR.h; ty < H + tileS; ty += tileS) {
+    drawStarTile(ctx, colR.x + (colR.w - tileS)/2, ty);
+    drawStarTile(ctx, colL.x + (colL.w - tileS)/2, ty);
+  }
+  ctx.strokeStyle = 'rgba(201,162,39,.4)'; ctx.lineWidth = 1.5;
+  // Right col: inner border is its left edge (facing center)
+  ctx.beginPath(); ctx.moveTo(colR.x, hdrR.h); ctx.lineTo(colR.x, H); ctx.stroke();
+  // Left col: inner border is its right edge (facing center)
+  ctx.beginPath(); ctx.moveTo(colL.x + colL.w, hdrR.h); ctx.lineTo(colL.x + colL.w, H); ctx.stroke();
+
+  // ⑤ Center radial gradient
+  var rg = ctx.createRadialGradient(cx, centR.y + centR.h*.2, 0, cx, centR.y + centR.h*.5, centR.h*.8);
+  rg.addColorStop(0, '#0e3d20'); rg.addColorStop(1, '#0a2e18');
+  ctx.fillStyle = rg; ctx.fillRect(centR.x, centR.y, centR.w, centR.h);
+
+  // ⑦–⑫ Text content (heading, subtitle, divider, greeting, name box)
+  function drawTextSection() {
+    var isLg = document.getElementById('eid-heading').classList.contains('eid-heading-lg');
+    var fs = isLg ? 28 : 22;
+    ctx.textAlign = 'center'; ctx.direction = 'rtl';
+    ctx.fillStyle = '#c9a227';
+    ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 10;
+    ctx.font = '900 ' + fs + 'px Tajawal, Arial';
+    var lh = fs * 1.35;
+    ctx.fillText('عيد أضحى', cx, hndgR.y + lh * 0.85);
+    ctx.fillText('مبارك',    cx, hndgR.y + lh * 1.95);
+    ctx.shadowBlur = 0;
+
+    ctx.font = '700 8px Tajawal, Arial';
+    ctx.fillStyle = 'rgba(201,162,39,.45)';
+    ctx.fillText('EID AL-ADHA MUBARAK', cx, hndgR.y + lh * 1.95 + fs * 0.55 + 6);
+
+    drawOrnamentLine(ctx, divdR.x, divdR.x + divdR.w, divdR.y + divdR.h/2);
+
+    ctx.font = '700 13px Tajawal, Arial'; ctx.fillStyle = 'rgba(255,255,255,.7)';
+    var glines = ['أهنئكم بمناسبة حلول','عيد الأضحى المبارك','أعاده الله علينا وعليكم باليمن والبركات','وكل عام وأنتم بخير'];
+    var glh = greetR.h / glines.length;
+    glines.forEach(function(ln, i) { ctx.fillText(ln, cx, greetR.y + glh*(i+0.78)); });
+
+    var nm = document.getElementById('c-name').textContent;
+    ctx.font = '900 15px Tajawal, Arial';
+    var bw = Math.max(ctx.measureText(nm).width + 44, nameBoxR.w);
+    var bh = nameBoxR.h, bx = cx - bw/2, by = nameBoxR.y;
+    rrect(ctx, bx, by, bw, bh, 7);
+    ctx.fillStyle = 'rgba(201,162,39,.07)'; ctx.fill();
+    rrect(ctx, bx, by, bw, bh, 7);
+    ctx.strokeStyle = 'rgba(201,162,39,.75)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#c9a227';
+    ctx.fillText(nm, cx, by + bh * 0.68);
+
+    ctx.restore(); // remove card clip
+    callback(canvas);
+  }
+
+  // ⑥ Photo circle or ornament
+  var hasPhoto = photoDataUrl && document.getElementById('eid-photo-img').style.display !== 'none';
+  if (hasPhoto) {
+    var pe = document.getElementById('eid-photo');
+    var pr = rel(pe);
+    var px = pr.x + pr.w/2, py = pr.y + pr.h/2, pr2 = pr.w/2;
+    // Glow ring
+    ctx.beginPath(); ctx.arc(px, py, pr2+7, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(201,162,39,.4)'; ctx.lineWidth = 4; ctx.stroke();
+    // Dark gap
+    ctx.beginPath(); ctx.arc(px, py, pr2+3, 0, Math.PI*2);
+    ctx.strokeStyle = '#0a2e18'; ctx.lineWidth = 5; ctx.stroke();
+    // Clip circle and draw photo
+    ctx.save();
+    ctx.beginPath(); ctx.arc(px, py, pr2, 0, Math.PI*2); ctx.clip();
+    var pImg = new Image();
+    pImg.onload = function() {
+      ctx.drawImage(pImg, px-pr2, py-pr2, pr2*2, pr2*2);
+      ctx.restore();
+      // Golden border
+      ctx.beginPath(); ctx.arc(px, py, pr2, 0, Math.PI*2);
+      ctx.strokeStyle = '#c9a227'; ctx.lineWidth = 3; ctx.stroke();
+      drawTextSection();
+    };
+    pImg.src = photoDataUrl;
+  } else {
+    var ornEl = document.getElementById('eid-ornament');
+    if (ornEl && ornEl.style.display !== 'none') {
+      var or = rel(ornEl);
+      drawOrnamentLine(ctx, or.x, or.x + or.w, or.y + or.h/2);
+    }
+    drawTextSection();
+  }
+}
+
+// ── Save ────────────────────────────────────────────────
+function saveCard() {
+  showToast('جارٍ تجهيز البطاقة...', '');
+  document.fonts.ready.then(function() {
+    drawCardToCanvas(function(canvas) {
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      var nm = document.getElementById('c-name').textContent || 'معايدة';
+      canvas.toBlob(function(blob) {
+        var file = new File([blob], 'معايدة.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({ files: [file], title: 'بطاقة المعايدة' })
+            .then(function() { showToast('تمت المشاركة', 'ok'); })
+            .catch(function(err) {
+              if (err.name !== 'AbortError') openImageInNewTab(canvas);
+            });
+        } else if (isIOS) {
+          openImageInNewTab(canvas);
+        } else {
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url; a.download = 'معايدة_' + nm + '.png'; a.click();
+          setTimeout(function() { URL.revokeObjectURL(url); }, 5000);
+          showToast('تم حفظ البطاقة بنجاح', 'ok');
+        }
+      }, 'image/png');
+    });
+  });
+}
+
+function resetForm() {
+  document.getElementById('card-preview').style.display = 'none';
+  var pi = document.getElementById('eid-photo-img');
+  pi.src = ''; pi.style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(t._t);
+  t._t = setTimeout(function() { t.className = 'toast'; }, 3200);
+}
+</script>
+</body>
+</html>

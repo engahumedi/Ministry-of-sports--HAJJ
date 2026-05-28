@@ -105,8 +105,8 @@ tr:hover td{background:#fafafa}
 </nav>
 
 <div class="tabs">
-  <button class="tab-btn active" id="tabRegBtn">✏️ تسجيل الحضور</button>
-  <button class="tab-btn" id="tabAdminBtn">📋 لوحة المشرف</button>
+  <button class="tab-btn active" id="tabRegBtn">تسجيل الحضور</button>
+  <button class="tab-btn" id="tabAdminBtn">لوحة المشرف</button>
 </div>
 
 <!-- CLOSED BANNER -->
@@ -181,11 +181,11 @@ tr:hover td{background:#fafafa}
     <div class="stat-bar" id="statBar"></div>
     <div class="refresh-bar" id="refreshBar"></div>
     <div class="toolbar">
-      <input class="search-in" type="text" id="searchBox" placeholder="🔍 بحث...">
-      <button class="tool-btn btn-ref" id="refreshBtn">🔄 تحديث</button>
-      <button class="tool-btn btn-toggle-open" id="toggleRegBtn">⏳ جارٍ...</button>
-      <button class="tool-btn btn-csv" id="exportBtn">💾 CSV</button>
-      <button class="tool-btn btn-del" id="clearBtn">🗑️ مسح الكل</button>
+      <input class="search-in" type="text" id="searchBox" placeholder="بحث...">
+      <button class="tool-btn btn-ref" id="refreshBtn">تحديث</button>
+      <button class="tool-btn btn-toggle-open" id="toggleRegBtn">جارٍ...</button>
+      <button class="tool-btn btn-csv" id="exportBtn">CSV</button>
+      <button class="tool-btn btn-del" id="clearBtn">مسح الكل</button>
     </div>
     <div class="tbl-wrap">
       <table>
@@ -520,5 +520,12 @@ document.getElementById('exportBtn').addEventListener('click', () => {
   toast('تم التصدير');
 });
 </script>
+
+<footer style="text-align:center;padding:28px 16px 40px;font-family:'Tajawal',sans-serif;background:#fff;border-top:2px solid #e8f5e9;margin-top:8px">
+  <div style="font-size:.85rem;color:#888;margin-bottom:6px">تصميم وبرمجة</div>
+  <div style="font-size:1.2rem;font-weight:900;color:#0a2e18">القائد / م.المهند حمدي</div>
+  <a href="https://wa.me/966599746324" target="_blank" style="display:inline-block;margin-top:8px;background:#25d366;color:#fff;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;padding:8px 22px;border-radius:30px;text-decoration:none">تواصل واتساب</a>
+  <div style="width:48px;height:3px;background:#c9a227;border-radius:4px;margin:10px auto 0"></div>
+</footer>
 </body>
 </html>
