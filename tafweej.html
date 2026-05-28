@@ -414,6 +414,16 @@ body{font-family:'Tajawal',Arial,sans-serif;background:var(--bg);color:var(--tex
 
 <script>
 // ════════════════════════════════════════
+// SECURITY HELPERS
+// ════════════════════════════════════════
+function esc(s) {
+  return String(s==null?'':s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function safeNum(n) { return /^-?\d+(\.\d+)?$/.test(String(n)) ? String(n) : ''; }
+
+// ════════════════════════════════════════
 // CONSTANTS & DATA
 // ════════════════════════════════════════
 var MON_PASS    = 'Aa@12345678';
@@ -713,8 +723,8 @@ function renderSupTable() {
         var num = pfx.replace(/^MOR/i,'');
         return '<tr>' +
           '<td><span style="font-weight:700">' + pfx + '</span> <span style="font-size:.72rem;color:var(--t2)">#' + num + '</span></td>' +
-          '<td>' + r.camp + '</td>' +
-          '<td>' + r.zone + '</td>' +
+          '<td>' + esc(r.camp) + '</td>' +
+          '<td>' + esc(r.zone) + '</td>' +
           '<td>' + vbadge(r.violation) + '</td>' +
           '<td>' + fmtTs(r.ts) + '</td>' +
           '<td>' + sbadge(r.status, r.id) + '</td>' +
@@ -810,19 +820,19 @@ function renderAdmTable() {
     var mon = MONS.find(function(m){ return m.e===r.monitorEmail; });
     var sup = mon ? SUPS.find(function(s){ return s.z.indexOf(mon.z)!==-1 && s.s===mon.s; }) : null;
     var supShort = sup ? sup.n : '—';
-    var gpsCell = (r.lat&&r.lng)
-      ? '<a href="https://maps.google.com/?q='+r.lat+','+r.lng+'" target="_blank" style="color:#1e88e5">📍</a>'
+    var gpsCell = (r.lat&&r.lng&&safeNum(r.lat)&&safeNum(r.lng))
+      ? '<a href="https://maps.google.com/?q='+safeNum(r.lat)+','+safeNum(r.lng)+'" target="_blank" style="color:#1e88e5">📍</a>'
       : '—';
     var photoCell = r.photo
       ? '<img src="'+r.photo+'" class="ri-img" onclick="viewPhoto(this.src)">'
       : '—';
     return '<tr>' +
-      '<td>' + r.camp + '</td>' +
-      '<td>' + r.zone + '</td>' +
-      '<td>' + r.monitorEmail.split('@')[0].toUpperCase() + '</td>' +
-      '<td style="font-size:.76rem">' + supShort + '</td>' +
+      '<td>' + esc(r.camp) + '</td>' +
+      '<td>' + esc(r.zone) + '</td>' +
+      '<td>' + esc(r.monitorEmail.split('@')[0].toUpperCase()) + '</td>' +
+      '<td style="font-size:.76rem">' + esc(supShort) + '</td>' +
       '<td>' + vbadge(r.violation) + '</td>' +
-      '<td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (r.notes||'—') + '</td>' +
+      '<td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(r.notes||'—') + '</td>' +
       '<td style="text-align:center">' + gpsCell + '</td>' +
       '<td style="text-align:center">' + photoCell + '</td>' +
       '<td>' + fmtTs(r.ts) + '</td>' +
@@ -858,10 +868,10 @@ function viewRep(id) {
   document.getElementById('vf-ts').textContent    = fmtTs(r.ts);
 
   var gpsWrap = document.getElementById('vf-gps-wrap');
-  if (r.lat && r.lng) {
+  if (r.lat && r.lng && safeNum(r.lat) && safeNum(r.lng)) {
     document.getElementById('vf-gps').innerHTML =
-      '<a href="https://maps.google.com/?q='+r.lat+','+r.lng+'" target="_blank" style="color:#1e88e5;text-decoration:none">📍 ' +
-      r.lat+', '+r.lng + (r.acc ? ' (±'+r.acc+'م)' : '') + '</a>';
+      '<a href="https://maps.google.com/?q='+safeNum(r.lat)+','+safeNum(r.lng)+'" target="_blank" style="color:#1e88e5;text-decoration:none">📍 ' +
+      esc(r.lat)+', '+esc(r.lng) + (r.acc ? ' (±'+esc(r.acc)+'م)' : '') + '</a>';
     gpsWrap.style.display = '';
   } else {
     gpsWrap.style.display = 'none';
@@ -1225,8 +1235,8 @@ function sc(n, label, color) {
 }
 
 function repItem(r) {
-  var gpsLink = (r.lat && r.lng)
-    ? '<a href="https://maps.google.com/?q='+r.lat+','+r.lng+'" target="_blank" style="color:#1e88e5;text-decoration:none" title="عرض الموقع">📍 الموقع</a> &nbsp;|&nbsp; '
+  var gpsLink = (r.lat && r.lng && safeNum(r.lat) && safeNum(r.lng))
+    ? '<a href="https://maps.google.com/?q='+safeNum(r.lat)+','+safeNum(r.lng)+'" target="_blank" style="color:#1e88e5;text-decoration:none" title="عرض الموقع">📍 الموقع</a> &nbsp;|&nbsp; '
     : '';
   var photoEl = r.photo
     ? '<img src="'+r.photo+'" class="ri-img" onclick="viewPhoto(this.src)" title="عرض الصورة">'
@@ -1240,8 +1250,8 @@ function repItem(r) {
   return '<div class="ri">' +
     '<div class="ri-l">' +
       '<div class="ri-v">'+vbadge(r.violation)+'</div>' +
-      '<div class="ri-m">🏕️ '+r.camp+' &nbsp;|&nbsp; '+gpsLink+fmtTs(r.ts)+'</div>' +
-      (r.notes ? '<div class="ri-note">'+r.notes+'</div>' : '') +
+      '<div class="ri-m">🏕️ '+esc(r.camp)+' &nbsp;|&nbsp; '+gpsLink+fmtTs(r.ts)+'</div>' +
+      (r.notes ? '<div class="ri-note">'+esc(r.notes)+'</div>' : '') +
       syncEl +
     '</div>' +
     '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex-shrink:0">' +
