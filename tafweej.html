@@ -1168,9 +1168,13 @@ function loadReps(role, cb) {
   if (role==='supervisor') { params.action='listByZones'; params.zones=CU.data.z.join(','); params.pass=SESSION_TOKEN; }
 
   gasGet(params, function(data) {
-    if (Array.isArray(data)) {
+    // GAS الجديد يُرجع {ok,rows} — القديم يُرجع [] مباشرة
+    var rows = Array.isArray(data) ? data
+             : (data && data.ok && Array.isArray(data.rows)) ? data.rows
+             : null;
+    if (rows) {
       var ids = {};
-      data.forEach(function(r){ r.synced = true; ids[String(r.id)]=1; });
+      rows.forEach(function(r){ r.synced = true; ids[String(r.id)]=1; });
       var localOnly = local.filter(function(r){ return !ids[String(r.id)]; });
       // mark already-synced local records
       if (role==='monitor') {
@@ -1178,7 +1182,7 @@ function loadReps(role, cb) {
         savedLocal.forEach(function(r){ if (ids[String(r.id)]) r.synced=true; });
         setMyLocal(savedLocal);
       }
-      cb(data.concat(localOnly));
+      cb(rows.concat(localOnly));
     } else {
       cb(local);
     }
