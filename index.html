@@ -366,6 +366,41 @@ footer { background:var(--g1); padding:2.5rem 2rem; text-align:center; }
 .drawer-link.svc{color:#c9a227;font-weight:700;background:rgba(201,162,39,.07);border-right:3px solid rgba(201,162,39,.5)}
 .drawer-link.svc:hover{background:rgba(201,162,39,.15)}
 
+/* ── Systems Section ── */
+#systems { background:var(--cream); padding:5rem 2rem; }
+.systems-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem; margin-top:.5rem; }
+.sys-card {
+  background:white; border-radius:20px; overflow:hidden;
+  box-shadow:0 4px 24px rgba(10,46,24,.1);
+  border:1px solid rgba(10,46,24,.08);
+  transition:transform .3s, box-shadow .3s;
+  display:flex; flex-direction:column;
+}
+.sys-card:hover { transform:translateY(-6px); box-shadow:0 12px 40px rgba(10,46,24,.18); }
+.sys-card-header {
+  padding:2rem 1.5rem 1.2rem;
+  background:linear-gradient(135deg,var(--g1),var(--g2));
+  text-align:center;
+}
+.sys-card-icon { font-size:2.8rem; display:block; margin-bottom:.6rem; }
+.sys-card-title { font-size:1.1rem; font-weight:900; color:var(--gold2); }
+.sys-card-body { padding:1.2rem 1.5rem; flex:1; display:flex; flex-direction:column; gap:.8rem; }
+.sys-card-desc { font-size:.88rem; color:var(--grey); line-height:1.7; flex:1; }
+.sys-card-btn {
+  display:block; text-align:center; text-decoration:none;
+  padding:.7rem 1.2rem; border-radius:12px; font-weight:800; font-size:.92rem;
+  transition:all .25s;
+}
+.sys-card-btn.gold { background:var(--gold); color:var(--g1); }
+.sys-card-btn.gold:hover { background:var(--gold2); transform:translateY(-1px); }
+.sys-card-btn.green { background:var(--g2); color:white; }
+.sys-card-btn.green:hover { background:var(--g1); }
+.sys-card-badge {
+  display:inline-block; font-size:.7rem; font-weight:800;
+  padding:2px 10px; border-radius:20px; margin-bottom:.5rem;
+  background:rgba(201,162,39,.15); color:var(--gold);
+}
+
 /* ── Weather Widget ── */
 .weather-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:1.5rem}
 .weather-card{background:rgba(255,255,255,.06);border:1px solid rgba(201,162,39,.2);border-radius:20px;padding:1.5rem;text-align:center}
@@ -415,6 +450,7 @@ footer { background:var(--g1); padding:2.5rem 2rem; text-align:center; }
   </div>
   <div class="drawer-sec">
     <div class="drawer-sec-lbl">تنقل الصفحة</div>
+    <a href="#systems" class="drawer-link" onclick="closeDrawer()">الأنظمة الرقمية</a>
     <a href="#announcements" class="drawer-link" onclick="closeDrawer()">الإعلانات</a>
     <a href="#dashboard" class="drawer-link" onclick="closeDrawer()">الإحصائيات</a>
     <a href="#mina-map" class="drawer-link" onclick="closeDrawer()">خريطة منى</a>
@@ -1054,6 +1090,64 @@ function showSamar(tab, btn) {
   if(btn) btn.classList.add("samar-active");
 }
 </script>
+
+<!-- SYSTEMS -->
+<section id="systems">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-tag">الأنظمة الرقمية</div>
+      <h2 class="section-title">أنظمة <span class="accent">المعسكر</span></h2>
+      <p style="color:var(--grey);margin-top:.5rem;font-size:.95rem">الخدمات الرقمية المتاحة لمنسوبي المعسكر</p>
+      <div class="section-line"></div>
+    </div>
+    <div class="systems-grid">
+
+      <!-- نظام التفويج — featured -->
+      <div class="sys-card reveal" style="border:2px solid rgba(201,162,39,.4);">
+        <div class="sys-card-header" style="background:linear-gradient(135deg,#0a2e18,#1a5c2e);">
+          <span class="sys-card-icon">⚡</span>
+          <div class="sys-card-badge">النظام الرئيسي</div>
+          <div class="sys-card-title">نظام مراقبة التفويج</div>
+        </div>
+        <div class="sys-card-body">
+          <div class="sys-card-desc">
+            منظومة متكاملة لرصد ومتابعة التفويج في مشعر منى — يتيح للمراقبين رفع البلاغات الميدانية، وللمتابعين متابعة مناطقهم، وللإدارة الاطلاع على لوحة تحكم شاملة في الوقت الفعلي.
+          </div>
+          <a href="tafweej.html" class="sys-card-btn gold">⚡ دخول نظام التفويج</a>
+        </div>
+      </div>
+
+      <!-- تسجيل الحضور -->
+      <div class="sys-card reveal">
+        <div class="sys-card-header">
+          <span class="sys-card-icon">✅</span>
+          <div class="sys-card-title">تسجيل الحضور</div>
+        </div>
+        <div class="sys-card-body">
+          <div class="sys-card-desc">
+            نظام تسجيل حضور منسوبي المعسكر بالموقع الجغرافي — يسجّل البيانات فورياً ويرفعها للقيادة.
+          </div>
+          <a href="attendance.html" class="sys-card-btn green">تسجيل الحضور</a>
+        </div>
+      </div>
+
+      <!-- استئذان الخروج -->
+      <div class="sys-card reveal">
+        <div class="sys-card-header" style="background:linear-gradient(135deg,#1a3a6b,#2e6bb5);">
+          <span class="sys-card-icon">🚪</span>
+          <div class="sys-card-title">استئذان الخروج</div>
+        </div>
+        <div class="sys-card-body">
+          <div class="sys-card-desc">
+            نموذج طلب الخروج من المعسكر — يُحدد الوجهة والوقت المتوقع للعودة لضمان سلامة المنسوبين.
+          </div>
+          <a href="exit.html" class="sys-card-btn" style="background:#1a3a6b;color:white;">تقديم استئذان</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
 
 <!-- GUIDE -->
 <section id="guide">
