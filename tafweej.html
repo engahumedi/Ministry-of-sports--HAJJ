@@ -835,8 +835,9 @@ function renderAdmTable() {
     var gpsCell = (r.lat&&r.lng&&safeNum(r.lat)&&safeNum(r.lng))
       ? '<a href="https://maps.google.com/?q='+safeNum(r.lat)+','+safeNum(r.lng)+'" target="_blank" style="color:#1e88e5">📍</a>'
       : '—';
-    var photoCell = r.photo
+    var photoCell = (r.photo && r.photo !== '[image]')
       ? '<img src="'+r.photo+'" class="ri-img" onclick="viewPhoto(this.src)">'
+      : r.photo === '[image]' ? '<span title="الصورة محفوظة على جهاز المراقب" style="font-size:1.1rem;cursor:default">📷</span>'
       : '—';
     return '<tr>' +
       '<td>' + esc(r.camp) + '</td>' +
@@ -891,9 +892,20 @@ function viewRep(id) {
   }
 
   var imgWrap = document.getElementById('vf-img-wrap');
-  if (r.photo) {
+  if (r.photo && r.photo !== '[image]') {
     document.getElementById('vf-img').src = r.photo;
     imgWrap.style.display = '';
+  } else if (r.photo === '[image]') {
+    imgWrap.style.display = '';
+    document.getElementById('vf-img').style.display = 'none';
+    var noPhoto = imgWrap.querySelector('.no-photo-note');
+    if (!noPhoto) {
+      noPhoto = document.createElement('div');
+      noPhoto.className = 'no-photo-note';
+      noPhoto.style.cssText = 'text-align:center;color:var(--t2);font-size:.85rem;padding:.8rem 0';
+      noPhoto.textContent = '📷 الصورة محفوظة على جهاز المراقب فقط';
+      imgWrap.appendChild(noPhoto);
+    }
   } else {
     imgWrap.style.display = 'none';
   }
@@ -906,6 +918,12 @@ function viewRep(id) {
 
 function closeViewModal() {
   document.getElementById('view-modal').classList.remove('open');
+  // reset photo state for next open
+  var img = document.getElementById('vf-img');
+  img.style.display = '';
+  img.src = '';
+  var note = document.querySelector('#vf-img-wrap .no-photo-note');
+  if (note) note.remove();
 }
 document.getElementById('view-modal').addEventListener('click', function(e){
   if (e.target===this) closeViewModal();
@@ -1255,8 +1273,9 @@ function repItem(r) {
   var gpsLink = (r.lat && r.lng && safeNum(r.lat) && safeNum(r.lng))
     ? '<a href="https://maps.google.com/?q='+safeNum(r.lat)+','+safeNum(r.lng)+'" target="_blank" style="color:#1e88e5;text-decoration:none" title="عرض الموقع">📍 الموقع</a> &nbsp;|&nbsp; '
     : '';
-  var photoEl = r.photo
+  var photoEl = (r.photo && r.photo !== '[image]')
     ? '<img src="'+r.photo+'" class="ri-img" onclick="viewPhoto(this.src)" title="عرض الصورة">'
+    : r.photo === '[image]' ? '<span title="الصورة محفوظة على جهاز المراقب" style="font-size:1.1rem">📷</span>'
     : '';
   var syncEl = '';
   if (ROLE === 'monitor') {
