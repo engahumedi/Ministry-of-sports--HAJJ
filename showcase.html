@@ -3,389 +3,628 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منظومة الخدمات الرقمية — معسكر المعيصم 1447هـ</title>
+<title>منظومة الخدمات الرقمية — م.المهند حمدي</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════
+   VARIABLES & RESET
+═══════════════════════════════════════════ */
 :root{
-  --g1:#0a2e18; --g2:#1a6b3c; --g3:#2e8b57;
-  --gold:#c9a227; --gold2:#e8c44a;
-  --cream:#f7f3ea;
+  --bg:       #060f0a;
+  --bg2:      #0c1f12;
+  --bg3:      #0f2916;
+  --g1:       #0a2e18;
+  --g2:       #1a6b3c;
+  --g3:       #2e8b57;
+  --gold:     #c9a227;
+  --gold2:    #e8c44a;
+  --gold3:    #f5d97a;
+  --glass:    rgba(255,255,255,.04);
+  --glass2:   rgba(255,255,255,.07);
+  --border:   rgba(201,162,39,.15);
+  --border2:  rgba(201,162,39,.35);
+  --text:     rgba(255,255,255,.9);
+  --text2:    rgba(255,255,255,.55);
+  --text3:    rgba(255,255,255,.3);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:'Tajawal',sans-serif;background:var(--g1);color:#fff;overflow-x:hidden}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:'Tajawal',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none;color:inherit}
 
-/* ══ HERO ══ */
+/* ═══════════════════════════════════════════
+   NOISE TEXTURE OVERLAY
+═══════════════════════════════════════════ */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
 .hero{
-  min-height:100vh;
-  background:radial-gradient(ellipse at top,#1a5c2e 0%,var(--g1) 65%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:3rem 2rem;position:relative;overflow:hidden;
+  min-height:100svh;
+  display:grid;place-items:center;
+  text-align:center;
+  padding:5rem 1.5rem 7rem;
+  position:relative;overflow:hidden;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(46,139,87,.25) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(201,162,39,.08) 0%, transparent 60%),
+    var(--bg);
 }
-.hero::before{
-  content:'';position:absolute;inset:0;
-  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a227' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  pointer-events:none;
+
+/* Animated grid lines */
+.hero-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(201,162,39,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,162,39,.05) 1px, transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  animation:gridDrift 20s linear infinite;
 }
-.hero-logo{
-  width:130px;height:130px;background:#fff;border-radius:20px;
-  display:flex;align-items:center;justify-content:center;
-  padding:14px;box-shadow:0 8px 40px rgba(0,0,0,.35);
-  margin-bottom:2rem;
-}
-.hero-logo img{width:100%;height:100%;object-fit:contain}
-.hero-tag{
-  display:inline-block;background:rgba(201,162,39,.15);
-  border:1px solid rgba(201,162,39,.4);color:var(--gold2);
-  font-size:.82rem;font-weight:700;padding:5px 18px;
-  border-radius:30px;margin-bottom:1.2rem;letter-spacing:.04em;
-}
-.hero h1{
-  font-size:clamp(1.9rem,5vw,3rem);font-weight:900;
-  line-height:1.25;margin-bottom:.8rem;
-}
-.hero h1 span{color:var(--gold2)}
-.hero-sub{
-  font-size:clamp(.95rem,2vw,1.1rem);color:rgba(255,255,255,.6);
-  max-width:520px;line-height:1.8;margin-bottom:2.5rem;
-}
-.hero-meta{
-  display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;
+@keyframes gridDrift{0%{background-position:0 0}100%{background-position:60px 60px}}
+
+/* Floating orbs */
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;animation:orbFloat 8s ease-in-out infinite;}
+.orb-1{width:400px;height:400px;background:rgba(46,139,87,.12);top:-100px;right:-100px;animation-delay:0s}
+.orb-2{width:300px;height:300px;background:rgba(201,162,39,.07);bottom:-50px;left:-50px;animation-delay:-4s}
+.orb-3{width:200px;height:200px;background:rgba(46,139,87,.08);top:40%;left:10%;animation-delay:-2s}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+
+.hero-inner{position:relative;z-index:1;max-width:720px}
+
+.hero-logo-wrap{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:110px;height:110px;
+  background:rgba(255,255,255,.97);
+  border-radius:28px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.2), 0 20px 60px rgba(0,0,0,.5), 0 0 80px rgba(46,139,87,.2);
   margin-bottom:2.5rem;
+  animation:logoPop .8s cubic-bezier(.34,1.56,.64,1) both;
 }
-.hero-badge{
+@keyframes logoPop{from{opacity:0;transform:scale(.7) translateY(20px)}to{opacity:1;transform:none}}
+.hero-logo-wrap img{width:80px;height:80px;object-fit:contain}
+
+.hero-pill{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(201,162,39,.1);
+  border:1px solid rgba(201,162,39,.3);
+  color:var(--gold2);
+  font-size:.78rem;font-weight:700;
+  padding:.35rem 1.1rem;border-radius:100px;
+  margin-bottom:1.5rem;letter-spacing:.05em;
+  animation:fadeUp .6s .2s both;
+}
+.hero-pill::before{content:'';width:6px;height:6px;background:var(--gold2);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+
+.hero-title{
+  font-size:clamp(2.2rem,7vw,4rem);
+  font-weight:900;
+  line-height:1.15;
+  margin-bottom:1.2rem;
+  animation:fadeUp .6s .35s both;
+}
+.hero-title .line2{
+  background:linear-gradient(135deg, var(--gold), var(--gold2), var(--gold3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block;
+}
+
+.hero-sub{
+  font-size:clamp(.95rem,2vw,1.1rem);
+  color:var(--text2);
+  line-height:1.9;
+  max-width:560px;
+  margin:0 auto 2.5rem;
+  animation:fadeUp .6s .5s both;
+}
+
+.hero-chips{
+  display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;
+  animation:fadeUp .6s .65s both;
+}
+.chip{
   display:flex;align-items:center;gap:.4rem;
-  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
-  border-radius:30px;padding:.4rem 1rem;font-size:.82rem;color:rgba(255,255,255,.7);
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:100px;
+  padding:.4rem 1rem;
+  font-size:.8rem;color:var(--text2);
+  backdrop-filter:blur(10px);
 }
-.hero-badge strong{color:var(--gold2)}
-.scroll-hint{
-  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
-  color:rgba(255,255,255,.3);font-size:.78rem;text-align:center;
-  animation:bounce 2s ease-in-out infinite;
-}
-.scroll-hint::after{content:'↓';display:block;font-size:1.2rem;margin-top:.2rem}
-@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+.chip-val{color:var(--gold2);font-weight:900;font-size:.95rem}
 
-/* ══ SECTION ══ */
-.section{padding:5rem 2rem}
-.section-wrap{max-width:1100px;margin:0 auto}
-.section-header{text-align:center;margin-bottom:3.5rem}
-.section-tag-gold{
-  display:inline-block;background:rgba(201,162,39,.12);
-  border:1px solid rgba(201,162,39,.3);color:var(--gold);
-  font-size:.8rem;font-weight:700;padding:4px 14px;
-  border-radius:20px;margin-bottom:.9rem;
+.scroll-cue{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  color:var(--text3);font-size:.72rem;letter-spacing:.1em;
+  animation:fadeIn 1s 1.5s both;
 }
-.section-title{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:900;margin-bottom:.5rem}
-.section-title span{color:var(--gold2)}
-.section-line{width:60px;height:3px;background:linear-gradient(90deg,var(--gold),var(--g3));border-radius:3px;margin:.8rem auto 0}
+.scroll-line{
+  width:1px;height:40px;
+  background:linear-gradient(to bottom, var(--gold), transparent);
+  animation:scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-/* ══ SERVICES GRID ══ */
-.services-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:1.8rem;
+/* ═══════════════════════════════════════════
+   STATS BAR
+═══════════════════════════════════════════ */
+.stats-bar{
+  position:relative;
+  background:linear-gradient(90deg, rgba(201,162,39,.07), rgba(46,139,87,.07), rgba(201,162,39,.07));
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:2.5rem 1.5rem;
+  overflow:hidden;
 }
-.svc-card{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(201,162,39,.18);
-  border-radius:22px;overflow:hidden;
-  transition:transform .3s,box-shadow .3s,border-color .3s;
-  display:flex;flex-direction:column;
-  cursor:pointer;text-decoration:none;color:inherit;
+.stats-bar::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--bg),transparent 15%,transparent 85%,var(--bg));
+  pointer-events:none;z-index:1;
 }
-.svc-card:hover{
-  transform:translateY(-8px);
-  box-shadow:0 16px 50px rgba(0,0,0,.4);
-  border-color:rgba(201,162,39,.55);
-}
-.svc-card:active{ transform:translateY(-2px); }
-.svc-card.featured{
-  border-color:rgba(201,162,39,.5);
-  box-shadow:0 0 0 1px rgba(201,162,39,.2);
-}
-.svc-header{
-  padding:2rem 1.8rem 1.4rem;
-  background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
-  border-bottom:1px solid rgba(255,255,255,.06);
-  display:flex;align-items:flex-start;gap:1rem;
-}
-.svc-icon{
-  width:56px;height:56px;border-radius:16px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.7rem;
-}
-.svc-info{flex:1}
-.svc-name{font-size:1.1rem;font-weight:900;color:#fff;margin-bottom:.2rem}
-.svc-badge{
-  display:inline-block;font-size:.68rem;font-weight:800;
-  padding:2px 9px;border-radius:12px;
-  background:rgba(201,162,39,.15);color:var(--gold);
-}
-.svc-body{padding:1.4rem 1.8rem;flex:1;display:flex;flex-direction:column;gap:1rem}
-.svc-desc{font-size:.88rem;color:rgba(255,255,255,.55);line-height:1.8;flex:1}
-.svc-features{list-style:none;display:flex;flex-direction:column;gap:.35rem}
-.svc-features li{
-  font-size:.8rem;color:rgba(255,255,255,.5);
-  display:flex;align-items:center;gap:.5rem;
-}
-.svc-features li::before{content:'✓';color:var(--gold2);font-weight:900;flex-shrink:0}
-.svc-footer{padding:1rem 1.8rem 1.6rem}
-.svc-btn{
-  display:block;text-align:center;text-decoration:none;
-  padding:.75rem 1.5rem;border-radius:13px;
-  font-weight:800;font-size:.95rem;
-  transition:all .25s;
-}
-.svc-btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--g1)}
-.svc-btn.gold:hover{box-shadow:0 6px 24px rgba(201,162,39,.4);transform:translateY(-1px)}
-.svc-btn.outline{
-  background:transparent;color:rgba(255,255,255,.7);
-  border:1px solid rgba(255,255,255,.2);
-}
-.svc-btn.outline:hover{background:rgba(255,255,255,.07);color:#fff;border-color:rgba(255,255,255,.35)}
-
-/* ══ STATS ══ */
-.stats-section{
-  background:linear-gradient(135deg,rgba(201,162,39,.08),rgba(201,162,39,.03));
-  border-top:1px solid rgba(201,162,39,.15);
-  border-bottom:1px solid rgba(201,162,39,.15);
-  padding:3rem 2rem;
-}
-.stats-row{
+.stats-inner{
   max-width:900px;margin:0 auto;
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-  gap:1.5rem;text-align:center;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1rem;position:relative;z-index:2;
 }
-.stat-item{}
-.stat-num{font-size:2.4rem;font-weight:900;color:var(--gold2);line-height:1}
-.stat-lbl{font-size:.8rem;color:rgba(255,255,255,.45);margin-top:.3rem}
-
-/* ══ AUTHOR ══ */
-.author-section{padding:4rem 2rem;text-align:center}
-.author-card{
-  max-width:480px;margin:0 auto;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(201,162,39,.2);
-  border-radius:24px;padding:2.5rem 2rem;
+.stat-box{text-align:center;padding:.5rem}
+.stat-box + .stat-box{
+  border-right:1px solid var(--border);
 }
-.author-avatar{
-  width:80px;height:80px;background:linear-gradient(135deg,var(--gold),var(--gold2));
-  border-radius:50%;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;
-  font-size:2rem;
+.stat-n{
+  font-size:2.8rem;font-weight:900;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;margin-bottom:.3rem;
 }
-.author-name{font-size:1.2rem;font-weight:900;color:var(--gold2);margin-bottom:.3rem}
-.author-title{font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:1.2rem}
-.author-divider{width:40px;height:2px;background:var(--gold);margin:.8rem auto}
+.stat-l{font-size:.78rem;color:var(--text3);font-weight:500;letter-spacing:.03em}
 
-/* ══ FOOTER ══ */
-footer{
-  border-top:1px solid rgba(201,162,39,.15);
-  padding:1.5rem 2rem;text-align:center;
-  font-size:.78rem;color:rgba(255,255,255,.25);
+/* ═══════════════════════════════════════════
+   SECTION
+═══════════════════════════════════════════ */
+.section{padding:6rem 1.5rem;position:relative}
+.wrap{max-width:1120px;margin:0 auto}
+
+.sec-label{
+  display:inline-flex;align-items:center;gap:.5rem;
+  color:var(--gold);font-size:.75rem;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.sec-label::before,
+.sec-label::after{content:'';flex:1;height:1px;background:var(--gold);opacity:.3;width:24px}
+
+.sec-title{
+  font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;
+  line-height:1.2;margin-bottom:.6rem;
+}
+.sec-title em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.sec-sub{font-size:.95rem;color:var(--text2);line-height:1.7}
+
+/* ═══════════════════════════════════════════
+   CARDS GRID
+═══════════════════════════════════════════ */
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.5rem;
+  margin-top:3.5rem;
+}
+.card-featured{ grid-column:span 1 }
+
+/* Base card */
+.card{
+  position:relative;
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:24px;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  transition:transform .35s cubic-bezier(.34,1.2,.64,1), box-shadow .35s ease, border-color .3s;
+  cursor:pointer;
+}
+.card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 24px 64px rgba(0,0,0,.5), 0 0 0 1px rgba(201,162,39,.3);
+  border-color:rgba(201,162,39,.4);
 }
 
-/* ══ REVEAL ══ */
-.reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
-.reveal.visible{opacity:1;transform:none}
+/* Animated glow border for featured */
+.card.star{
+  border-color:transparent;
+  background:linear-gradient(var(--bg2),var(--bg2)) padding-box,
+             linear-gradient(135deg,var(--gold),var(--gold2),var(--g3),var(--gold)) border-box;
+  animation:borderGlow 4s linear infinite;
+}
+@keyframes borderGlow{
+  0%{background:linear-gradient(var(--bg2),var(--bg2)) padding-box,linear-gradient(0deg,var(--gold),var(--gold2),var(--g3),var(--gold)) border-box}
+  100%{background:linear-gradient(var(--bg2),var(--bg2)) padding-box,linear-gradient(360deg,var(--gold),var(--gold2),var(--g3),var(--gold)) border-box}
+}
 
-/* ══ RESPONSIVE ══ */
+/* Card accent bar */
+.card-bar{height:3px;width:100%}
+
+/* Card top */
+.card-top{
+  padding:1.6rem 1.6rem 1.2rem;
+  display:flex;align-items:flex-start;gap:1rem;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.card-num{
+  font-size:.65rem;font-weight:900;letter-spacing:.12em;
+  color:var(--text3);font-family:monospace;
+  flex-shrink:0;padding-top:.15rem;
+}
+.card-icon-wrap{
+  flex-shrink:0;width:50px;height:50px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;position:relative;
+}
+.card-meta{flex:1}
+.card-name{font-size:1.05rem;font-weight:900;color:var(--text);margin-bottom:.3rem;line-height:1.3}
+.card-tag{
+  display:inline-block;
+  font-size:.65rem;font-weight:800;letter-spacing:.06em;
+  padding:2px 8px;border-radius:100px;
+}
+
+/* Card body */
+.card-body{padding:1.2rem 1.6rem;flex:1;display:flex;flex-direction:column;gap:.9rem}
+.card-desc{font-size:.85rem;color:var(--text2);line-height:1.8;flex:1}
+.card-chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.feat-chip{
+  font-size:.72rem;color:var(--text2);
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  padding:3px 10px;border-radius:100px;
+}
+
+/* Card footer */
+.card-foot{padding:.9rem 1.6rem 1.4rem}
+.card-cta{
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.75rem;border-radius:14px;
+  font-weight:800;font-size:.9rem;
+  transition:all .25s;letter-spacing:.02em;
+}
+.cta-gold{
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);
+  color:var(--bg);
+  box-shadow:0 4px 20px rgba(201,162,39,.3);
+}
+.cta-gold:hover{box-shadow:0 8px 32px rgba(201,162,39,.5);transform:translateY(-1px)}
+.cta-ghost{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  color:var(--text2);
+}
+.cta-ghost:hover{background:rgba(255,255,255,.09);color:var(--text);border-color:rgba(255,255,255,.2)}
+.arrow{font-size:1rem;transition:transform .2s}
+.card:hover .arrow{transform:translateX(-4px)}
+
+/* ═══════════════════════════════════════════
+   AUTHOR
+═══════════════════════════════════════════ */
+.author-wrap{
+  max-width:580px;margin:0 auto;
+  background:linear-gradient(135deg,rgba(46,139,87,.08),rgba(201,162,39,.06));
+  border:1px solid var(--border);
+  border-radius:28px;
+  padding:3rem 2.5rem;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.author-wrap::before{
+  content:'';position:absolute;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,162,39,.1),transparent 70%);
+  top:-60px;left:50%;transform:translateX(-50%);
+}
+.author-avatar-ring{
+  width:90px;height:90px;border-radius:50%;
+  background:conic-gradient(var(--gold),var(--gold2),var(--g3),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.2rem;
+  animation:spin 8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.author-avatar-inner{
+  width:82px;height:82px;border-radius:50%;
+  background:var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;
+  animation:spin 8s linear reverse infinite;
+}
+.author-name{
+  font-size:1.4rem;font-weight:900;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:.2rem;
+}
+.author-role{font-size:.85rem;color:var(--text3);margin-bottom:1.2rem}
+.author-divider{
+  width:50px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:.8rem auto 1.2rem;
+}
+.author-desc{font-size:.88rem;color:var(--text2);line-height:1.8}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+.footer{
+  padding:2rem 1.5rem;text-align:center;
+  border-top:1px solid var(--border);
+  font-size:.75rem;color:var(--text3);
+  letter-spacing:.04em;
+}
+
+/* ═══════════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════════ */
+.rv{opacity:0;transform:translateY(32px);transition:opacity .65s ease,transform .65s ease}
+.rv.show{opacity:1;transform:none}
+.rv-delay-1{transition-delay:.1s}
+.rv-delay-2{transition-delay:.2s}
+.rv-delay-3{transition-delay:.3s}
+.rv-delay-4{transition-delay:.4s}
+.rv-delay-5{transition-delay:.5s}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media(max-width:900px){
+  .cards-grid{grid-template-columns:repeat(2,1fr)}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .stat-box:nth-child(3){border-right:none}
+  .stat-box:nth-child(odd){border-right:1px solid var(--border)}
+}
 @media(max-width:600px){
-  .services-grid{grid-template-columns:1fr}
-  .hero-logo{width:110px;height:110px}
+  .cards-grid{grid-template-columns:1fr}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .hero-title{font-size:2rem}
+  .card.star{border-color:rgba(201,162,39,.4);background:var(--glass)}
 }
 </style>
 </head>
 <body>
 
-<!-- HERO -->
+<!-- ══ HERO ══ -->
 <div class="hero">
-  <div class="hero-logo">
-    <img src="logo.png" alt="وزارة الرياضة">
+  <div class="hero-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="hero-inner">
+    <div class="hero-logo-wrap">
+      <img src="logo.png" alt="وزارة الرياضة">
+    </div>
+
+    <div class="hero-pill">
+      <span></span>موسم الحج 1447هـ — وزارة الرياضة السعودية
+    </div>
+
+    <h1 class="hero-title">
+      منظومة الخدمات الرقمية
+      <span class="line2">عمل م.المهند حمدي</span>
+    </h1>
+
+    <p class="hero-sub">
+      مجموعة متكاملة من الأنظمة والخدمات الرقمية المطوَّرة لدعم العمليات الميدانية
+      وتعزيز التواصل بين منسوبي وزارة الرياضة خلال موسم الحج المبارك.
+    </p>
+
+    <div class="hero-chips">
+      <div class="chip"><span class="chip-val">6</span> أنظمة رقمية</div>
+      <div class="chip"><span class="chip-val">617</span> مراقب</div>
+      <div class="chip"><span class="chip-val">86</span> متابع</div>
+      <div class="chip"><span class="chip-val">703</span> مستخدم</div>
+      <div class="chip">📍 منى — مكة المكرمة</div>
+    </div>
   </div>
-  <div class="hero-tag">موسم الحج 1447هـ — وزارة الرياضة</div>
-  <h1>منظومة الخدمات الرقمية<br><span>عمل م.المهند حمدي</span></h1>
-  <p class="hero-sub">
-    مجموعة متكاملة من الأنظمة والخدمات الرقمية المطوَّرة لدعم العمليات الميدانية
-    وتعزيز التواصل بين منسوبي وزارة الرياضة خلال موسم الحج المبارك.
-  </p>
-  <div class="hero-meta">
-    <div class="hero-badge"><strong>6</strong> خدمات رقمية</div>
-    <div class="hero-badge"><strong>617</strong> مراقب</div>
-    <div class="hero-badge"><strong>86</strong> متابع</div>
-    <div class="hero-badge">منى — مكة المكرمة</div>
+
+  <div class="scroll-cue">
+    <span>استعرض</span>
+    <div class="scroll-line"></div>
   </div>
-  <div class="scroll-hint">تمرير للأسفل</div>
 </div>
 
-<!-- STATS -->
-<div class="stats-section">
-  <div class="stats-row">
-    <div class="stat-item">
-      <div class="stat-num">6</div>
-      <div class="stat-lbl">أنظمة رقمية</div>
+<!-- ══ STATS ══ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-box rv rv-delay-1">
+      <div class="stat-n" data-target="6">0</div>
+      <div class="stat-l">أنظمة رقمية متكاملة</div>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">703</div>
-      <div class="stat-lbl">مستخدم مسجّل</div>
+    <div class="stat-box rv rv-delay-2">
+      <div class="stat-n" data-target="703">0</div>
+      <div class="stat-l">مستخدم مسجّل</div>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">3</div>
-      <div class="stat-lbl">ورديات تشغيل</div>
+    <div class="stat-box rv rv-delay-3">
+      <div class="stat-n" data-target="3">0</div>
+      <div class="stat-l">ورديات تشغيل يومية</div>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">24</div>
-      <div class="stat-lbl">ساعة مراقبة</div>
+    <div class="stat-box rv rv-delay-4">
+      <div class="stat-n" data-target="24">0</div>
+      <div class="stat-l">ساعة مراقبة متواصلة</div>
     </div>
   </div>
 </div>
 
-<!-- SERVICES -->
+<!-- ══ SERVICES ══ -->
 <section class="section">
-  <div class="section-wrap">
-    <div class="section-header reveal">
-      <div class="section-tag-gold">الأنظمة والخدمات</div>
-      <h2 class="section-title">ما تم <span>تطويره وإنجازه</span></h2>
-      <div class="section-line"></div>
+  <div class="wrap">
+    <div style="margin-bottom:3.5rem" class="rv">
+      <div class="sec-label">الإنجازات والأنظمة</div>
+      <h2 class="sec-title">ما تم <em>تطويره وإنجازه</em></h2>
+      <p class="sec-sub">اضغط على أي بطاقة لفتح النظام مباشرة</p>
     </div>
 
-    <div class="services-grid">
+    <div class="cards-grid">
 
-      <!-- الموقع الرئيسي -->
-      <a href="index.html" class="svc-card featured reveal">
-        <div class="svc-header">
-          <div class="svc-icon" style="background:rgba(201,162,39,.15)">🌐</div>
-          <div class="svc-info">
-            <div class="svc-name">الموقع الرئيسي</div>
-            <span class="svc-badge">البوابة الرئيسية</span>
+      <!-- ① الموقع الرئيسي -->
+      <a href="index.html" class="card star rv rv-delay-1">
+        <div class="card-bar" style="background:linear-gradient(90deg,#c9a227,#e8c44a)"></div>
+        <div class="card-top">
+          <span class="card-num">01</span>
+          <div class="card-icon-wrap" style="background:rgba(201,162,39,.12)">🌐</div>
+          <div class="card-meta">
+            <div class="card-name">الموقع الرئيسي</div>
+            <span class="card-tag" style="background:rgba(201,162,39,.15);color:#e8c44a">البوابة الرئيسية</span>
           </div>
         </div>
-        <div class="svc-body">
-          <p class="svc-desc">الواجهة الرئيسية — تعرض إحصائيات المعسكر، الإعلانات، جدول البرامج، خريطة منى، جدول الخدمة، ودليل المشارك.</p>
-          <ul class="svc-features">
-            <li>إحصائيات وأرقام المعسكر</li>
-            <li>ويجت الطقس ومؤشر الأشعة UV</li>
-            <li>خريطة تفاعلية لمشعر منى</li>
-            <li>جدول الخدمة اليومية</li>
-            <li>دليل المشارك الشامل</li>
-          </ul>
+        <div class="card-body">
+          <p class="card-desc">الواجهة الرئيسية للمعسكر — إحصائيات، إعلانات، جدول برامج، خريطة منى التفاعلية، ودليل المشارك الشامل.</p>
+          <div class="card-chips">
+            <span class="feat-chip">🌤️ ويجت الطقس</span>
+            <span class="feat-chip">🗺️ خريطة منى</span>
+            <span class="feat-chip">📅 جدول البرامج</span>
+            <span class="feat-chip">📖 دليل المشارك</span>
+          </div>
         </div>
-        <div class="svc-footer">
-          <div class="svc-btn gold">فتح الموقع الرئيسي ←</div>
+        <div class="card-foot">
+          <div class="card-cta cta-gold">فتح الموقع <span class="arrow">←</span></div>
         </div>
       </a>
 
-      <!-- نظام التفويج -->
-      <a href="tafweej.html" class="svc-card featured reveal">
-        <div class="svc-header">
-          <div class="svc-icon" style="background:rgba(229,57,53,.12)">⚡</div>
-          <div class="svc-info">
-            <div class="svc-name">نظام مراقبة التفويج</div>
-            <span class="svc-badge">النظام الأبرز</span>
+      <!-- ② نظام التفويج -->
+      <a href="tafweej.html" class="card star rv rv-delay-2">
+        <div class="card-bar" style="background:linear-gradient(90deg,#e53935,#ff7043)"></div>
+        <div class="card-top">
+          <span class="card-num">02</span>
+          <div class="card-icon-wrap" style="background:rgba(229,57,53,.12)">⚡</div>
+          <div class="card-meta">
+            <div class="card-name">نظام مراقبة التفويج</div>
+            <span class="card-tag" style="background:rgba(229,57,53,.15);color:#ff8a80">النظام الأبرز</span>
           </div>
         </div>
-        <div class="svc-body">
-          <p class="svc-desc">منظومة متكاملة لرصد التفويج في مشعر منى — ثلاث واجهات متخصصة للمراقبين والمتابعين ومدير النظام بصلاحيات مختلفة.</p>
-          <ul class="svc-features">
-            <li>617 مراقب ميداني مسجّل</li>
-            <li>86 متابع موزعَّون على المناطق</li>
-            <li>رفع البلاغات بالموقع الجغرافي والصور</li>
-            <li>لوحة تحكم إدارية شاملة</li>
-            <li>تصدير التقارير CSV</li>
-          </ul>
+        <div class="card-body">
+          <p class="card-desc">منظومة متكاملة لرصد التفويج — ثلاث واجهات للمراقبين والمتابعين والإدارة، مع رفع البلاغات بالموقع والصور.</p>
+          <div class="card-chips">
+            <span class="feat-chip">👁 617 مراقب</span>
+            <span class="feat-chip">📍 موقع جغرافي</span>
+            <span class="feat-chip">📊 لوحة تحكم</span>
+            <span class="feat-chip">📤 تصدير CSV</span>
+          </div>
         </div>
-        <div class="svc-footer">
-          <div class="svc-btn gold">فتح نظام التفويج ←</div>
+        <div class="card-foot">
+          <div class="card-cta cta-gold">فتح نظام التفويج <span class="arrow">←</span></div>
         </div>
       </a>
 
-      <!-- تسجيل الحضور -->
-      <a href="attendance.html" class="svc-card reveal">
-        <div class="svc-header">
-          <div class="svc-icon" style="background:rgba(46,139,87,.15)">✅</div>
-          <div class="svc-info">
-            <div class="svc-name">تسجيل الحضور</div>
-            <span class="svc-badge">خدمة ميدانية</span>
+      <!-- ③ تسجيل الحضور -->
+      <a href="attendance.html" class="card rv rv-delay-3">
+        <div class="card-bar" style="background:linear-gradient(90deg,#2e8b57,#43a047)"></div>
+        <div class="card-top">
+          <span class="card-num">03</span>
+          <div class="card-icon-wrap" style="background:rgba(46,139,87,.15)">✅</div>
+          <div class="card-meta">
+            <div class="card-name">تسجيل الحضور</div>
+            <span class="card-tag" style="background:rgba(46,139,87,.15);color:#69f0ae">خدمة ميدانية</span>
           </div>
         </div>
-        <div class="svc-body">
-          <p class="svc-desc">نظام تسجيل حضور منسوبي المعسكر بالموقع الجغرافي — يرفع البيانات فورياً ويُمكّن القيادة من متابعة نسب الحضور.</p>
-          <ul class="svc-features">
-            <li>تحديد الموقع الجغرافي تلقائياً</li>
-            <li>حفظ البيانات في Google Sheets</li>
-            <li>لوحة تحكم للإدارة</li>
-          </ul>
+        <div class="card-body">
+          <p class="card-desc">نظام تسجيل حضور المنسوبين بالموقع الجغرافي — يرفع البيانات فورياً لـ Google Sheets مع لوحة متابعة للإدارة.</p>
+          <div class="card-chips">
+            <span class="feat-chip">📍 GPS تلقائي</span>
+            <span class="feat-chip">☁️ Google Sheets</span>
+            <span class="feat-chip">📋 تقارير فورية</span>
+          </div>
         </div>
-        <div class="svc-footer">
-          <div class="svc-btn outline">فتح نظام الحضور ←</div>
+        <div class="card-foot">
+          <div class="card-cta cta-ghost">فتح نظام الحضور <span class="arrow">←</span></div>
         </div>
       </a>
 
-      <!-- استئذان الخروج -->
-      <a href="exit.html" class="svc-card reveal">
-        <div class="svc-header">
-          <div class="svc-icon" style="background:rgba(30,136,229,.12)">🚪</div>
-          <div class="svc-info">
-            <div class="svc-name">استئذان الخروج</div>
-            <span class="svc-badge">خدمة ميدانية</span>
+      <!-- ④ استئذان الخروج -->
+      <a href="exit.html" class="card rv rv-delay-1">
+        <div class="card-bar" style="background:linear-gradient(90deg,#1565c0,#1e88e5)"></div>
+        <div class="card-top">
+          <span class="card-num">04</span>
+          <div class="card-icon-wrap" style="background:rgba(30,136,229,.12)">🚪</div>
+          <div class="card-meta">
+            <div class="card-name">استئذان الخروج</div>
+            <span class="card-tag" style="background:rgba(30,136,229,.15);color:#82b1ff">خدمة ميدانية</span>
           </div>
         </div>
-        <div class="svc-body">
-          <p class="svc-desc">نموذج إلكتروني لطلب الخروج من المعسكر — يُحدد الوجهة والوقت المتوقع للعودة لضمان سلامة المنسوبين ومتابعتهم.</p>
-          <ul class="svc-features">
-            <li>تسجيل وقت الخروج والعودة</li>
-            <li>تحديد الوجهة والسبب</li>
-            <li>متابعة الطلبات من الإدارة</li>
-          </ul>
+        <div class="card-body">
+          <p class="card-desc">نموذج إلكتروني لطلب مغادرة المعسكر — يُحدد الوجهة والوقت المتوقع للعودة لضمان سلامة المنسوبين.</p>
+          <div class="card-chips">
+            <span class="feat-chip">⏱️ توقيت الخروج</span>
+            <span class="feat-chip">📝 سبب المغادرة</span>
+            <span class="feat-chip">✔️ موافقة الإدارة</span>
+          </div>
         </div>
-        <div class="svc-footer">
-          <div class="svc-btn outline">فتح نظام الاستئذان ←</div>
+        <div class="card-foot">
+          <div class="card-cta cta-ghost">فتح نظام الاستئذان <span class="arrow">←</span></div>
         </div>
       </a>
 
-      <!-- بطاقة الهوية -->
-      <a href="id-card.html" class="svc-card reveal">
-        <div class="svc-header">
-          <div class="svc-icon" style="background:rgba(103,58,183,.12)">🪪</div>
-          <div class="svc-info">
-            <div class="svc-name">بطاقة الهوية</div>
-            <span class="svc-badge">هوية رقمية</span>
+      <!-- ⑤ بطاقة الهوية -->
+      <a href="id-card.html" class="card rv rv-delay-2">
+        <div class="card-bar" style="background:linear-gradient(90deg,#6a1b9a,#9c27b0)"></div>
+        <div class="card-top">
+          <span class="card-num">05</span>
+          <div class="card-icon-wrap" style="background:rgba(103,58,183,.12)">🪪</div>
+          <div class="card-meta">
+            <div class="card-name">بطاقة الهوية</div>
+            <span class="card-tag" style="background:rgba(156,39,176,.15);color:#e040fb">هوية رقمية</span>
           </div>
         </div>
-        <div class="svc-body">
-          <p class="svc-desc">توليد بطاقة هوية رقمية لمنسوبي المعسكر — تحتوي على بيانات المشارك والجناح والوردية بتصميم احترافي قابل للطباعة.</p>
-          <ul class="svc-features">
-            <li>تصميم احترافي بألوان المعسكر</li>
-            <li>قابلة للطباعة والمشاركة</li>
-            <li>تحتوي كل بيانات المشارك</li>
-          </ul>
+        <div class="card-body">
+          <p class="card-desc">بطاقة هوية رقمية احترافية لمنسوبي المعسكر — تصميم مميز بألوان الوزارة قابل للمشاركة والطباعة.</p>
+          <div class="card-chips">
+            <span class="feat-chip">🎨 تصميم احترافي</span>
+            <span class="feat-chip">🖨️ للطباعة</span>
+            <span class="feat-chip">📲 مشاركة فورية</span>
+          </div>
         </div>
-        <div class="svc-footer">
-          <div class="svc-btn outline">فتح بطاقة الهوية ←</div>
+        <div class="card-foot">
+          <div class="card-cta cta-ghost">فتح بطاقة الهوية <span class="arrow">←</span></div>
         </div>
       </a>
 
-      <!-- بطاقة المعايدة -->
-      <a href="eid-card.html" class="svc-card reveal">
-        <div class="svc-header">
-          <div class="svc-icon" style="background:rgba(233,30,99,.1)">🎉</div>
-          <div class="svc-info">
-            <div class="svc-name">بطاقة المعايدة</div>
-            <span class="svc-badge">مناسبة</span>
+      <!-- ⑥ بطاقة المعايدة -->
+      <a href="eid-card.html" class="card rv rv-delay-3">
+        <div class="card-bar" style="background:linear-gradient(90deg,#ad1457,#e91e63)"></div>
+        <div class="card-top">
+          <span class="card-num">06</span>
+          <div class="card-icon-wrap" style="background:rgba(233,30,99,.1)">🎉</div>
+          <div class="card-meta">
+            <div class="card-name">بطاقة المعايدة</div>
+            <span class="card-tag" style="background:rgba(233,30,99,.15);color:#ff80ab">مناسبة خاصة</span>
           </div>
         </div>
-        <div class="svc-body">
-          <p class="svc-desc">بطاقة معايدة رقمية بمناسبة عيد الأضحى المبارك — تُولَّد تلقائياً بالاسم وتُشارك مباشرةً عبر واتساب ووسائل التواصل.</p>
-          <ul class="svc-features">
-            <li>تخصيص الاسم تلقائياً</li>
-            <li>مشاركة فورية عبر واتساب</li>
-            <li>تصميم احتفالي جميل</li>
-          </ul>
+        <div class="card-body">
+          <p class="card-desc">بطاقة عيد أضحى مبارك رقمية — تُولَّد تلقائياً بالاسم وتُشارك بنقرة واحدة عبر واتساب ووسائل التواصل.</p>
+          <div class="card-chips">
+            <span class="feat-chip">✍️ تخصيص الاسم</span>
+            <span class="feat-chip">💬 واتساب</span>
+            <span class="feat-chip">🎊 تصميم احتفالي</span>
+          </div>
         </div>
-        <div class="svc-footer">
-          <div class="svc-btn outline">فتح بطاقة المعايدة ←</div>
+        <div class="card-foot">
+          <div class="card-cta cta-ghost">فتح بطاقة المعايدة <span class="arrow">←</span></div>
         </div>
       </a>
 
@@ -393,29 +632,61 @@ footer{
   </div>
 </section>
 
-<!-- AUTHOR -->
-<div class="author-section">
-  <div class="author-card reveal">
-    <div class="author-avatar">👨‍💻</div>
-    <div class="author-name">م. المهند حمدي</div>
-    <div class="author-divider"></div>
-    <p style="font-size:.85rem;color:rgba(255,255,255,.45);line-height:1.8">
-      تم تصميم وتطوير جميع هذه الأنظمة خلال موسم الحج 1447هـ
-    </p>
+<!-- ══ AUTHOR ══ -->
+<section class="section" style="padding-top:1rem;padding-bottom:5rem">
+  <div class="wrap">
+    <div class="author-wrap rv">
+      <div class="author-avatar-ring">
+        <div class="author-avatar-inner">👨‍💻</div>
+      </div>
+      <div class="author-name">م. المهند حمدي</div>
+      <div class="author-role">مصمم ومطوِّر المنظومة الرقمية</div>
+      <div class="author-divider"></div>
+      <p class="author-desc">
+        تم تصميم وتطوير جميع هذه الأنظمة خلال موسم الحج 1447هـ<br>
+        لخدمة منسوبي وزارة الرياضة السعودية
+      </p>
+    </div>
   </div>
-</div>
+</section>
 
-<footer>
-  موسم الحج 1447هـ &nbsp;|&nbsp; وزارة الرياضة السعودية
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  موسم الحج 1447هـ &nbsp;·&nbsp; وزارة الرياضة السعودية
 </footer>
 
 <script>
-var observer = new IntersectionObserver(function(entries){
+/* ── Intersection Observer ── */
+var io = new IntersectionObserver(function(entries){
   entries.forEach(function(e){
-    if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); }
+    if(e.isIntersecting){
+      e.target.classList.add('show');
+      io.unobserve(e.target);
+    }
   });
-},{threshold:.15});
-document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+},{threshold:.12});
+document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+/* ── Counter animation ── */
+function animateCounter(el, target, duration) {
+  var start = 0, step = duration / 60;
+  var inc = target / (duration / (1000/60));
+  var timer = setInterval(function(){
+    start += inc;
+    if(start >= target){ start = target; clearInterval(timer); }
+    el.textContent = Math.round(start);
+  }, 1000/60);
+}
+var counterIO = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      var target = parseInt(e.target.dataset.target);
+      animateCounter(e.target, target, 1200);
+      counterIO.unobserve(e.target);
+    }
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-target]').forEach(function(el){ counterIO.observe(el); });
 </script>
 </body>
 </html>
