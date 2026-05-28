@@ -1178,14 +1178,30 @@ function saveAllLocal() {
   if (ROLE==='monitor') setMyLocal(REPS);
 }
 
-function gasPost(data, cb) {
-  // Use GET instead of POST to avoid CORS preflight and redirect issues with GAS
+function gasPost(data, cb, _attempt) {
+  // Use GET to avoid CORS/redirect issues with GAS
   var payload = Object.assign({}, data, {pass: MON_PASS});
   var qs = Object.keys(payload).map(function(k){
     return encodeURIComponent(k)+'='+encodeURIComponent(payload[k]||'');
   }).join('&');
+  _attempt = _attempt || 1;
   fetch(GAS+'?'+qs)
-    .then(function(r){ return r.json(); }).then(cb).catch(function(){ cb(null); });
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if ((!res || !res.ok) && _attempt < 4) {
+        // Retry with exponential backoff: 2s, 4s, 8s
+        setTimeout(function(){ gasPost(data, cb, _attempt + 1); }, _attempt * 2000);
+      } else {
+        cb(res);
+      }
+    })
+    .catch(function(){
+      if (_attempt < 4) {
+        setTimeout(function(){ gasPost(data, cb, _attempt + 1); }, _attempt * 2000);
+      } else {
+        cb(null);
+      }
+    });
 }
 function gasGet(params, cb) {
   var qs = Object.keys(params).map(function(k){
