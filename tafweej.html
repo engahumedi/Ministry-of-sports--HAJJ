@@ -808,7 +808,7 @@ function renderAdmTable() {
   }
   tbody.innerHTML = filtered.slice().reverse().map(function(r) {
     var mon = MONS.find(function(m){ return m.e===r.monitorEmail; });
-    var sup = mon ? SUPS.find(function(s){ return s.z.indexOf(mon.z)!==-1; }) : null;
+    var sup = mon ? SUPS.find(function(s){ return s.z.indexOf(mon.z)!==-1 && s.s===mon.s; }) : null;
     var supShort = sup ? sup.n : '—';
     var gpsCell = (r.lat&&r.lng)
       ? '<a href="https://maps.google.com/?q='+r.lat+','+r.lng+'" target="_blank" style="color:#1e88e5">📍</a>'
