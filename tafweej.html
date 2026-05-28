@@ -426,8 +426,8 @@ function safeNum(n) { return /^-?\d+(\.\d+)?$/.test(String(n)) ? String(n) : '';
 // ════════════════════════════════════════
 // CONSTANTS & DATA
 // ════════════════════════════════════════
-var MON_PASS    = 'Aa@12345678';
-var ADMIN_TOKEN = null; // set in memory after GAS validates admin — never in source
+var SESSION_TOKEN = null; // set in memory after GAS login — never in source
+var ADMIN_TOKEN   = null; // admin token — set after admin GAS validation
 var SHIFT_NAMES = {1:'الوردية الأولى',2:'الوردية الثانية',3:'الوردية الثالثة'};
 var SHIFT = 'الوردية الثانية';
 
@@ -471,34 +471,40 @@ function doLogin() {
   var btn   = document.querySelector('#pg-login .btn.bg');
   err.textContent = '';
   if (!email || !pass) { err.textContent = 'يرجى إدخال البريد وكلمة المرور'; return; }
+  if (!GAS)            { err.textContent = 'يتطلب اتصال بالإنترنت للدخول'; return; }
 
-  // Monitor / Supervisor — validated locally
-  if (pass === MON_PASS) {
-    var sup = SUPS.find(function(s){ return s.e === email; });
-    if (sup) { SHIFT = SHIFT_NAMES[sup.s] || 'الوردية الثانية'; CU = {email:email, data:sup}; ROLE = 'supervisor'; showPg('pg-sup'); initSup(); return; }
-    var mon = MONS.find(function(m){ return m.e === email; });
-    if (mon) { SHIFT = SHIFT_NAMES[mon.s] || 'الوردية الثانية'; CU = {email:email, data:mon}; ROLE = 'monitor'; showPg('pg-mon'); initMon(); return; }
-  }
+  btn.disabled = true; err.textContent = 'جارٍ التحقق…';
 
-  // Admin — validated via GAS only (password never stored in this file)
-  if (GAS) {
-    btn.disabled = true; err.textContent = 'جارٍ التحقق…';
-    gasGet({action:'validateAdmin', email:email, pass:pass}, function(res) {
+  // All auth goes through GAS — no passwords in source
+  fetch(GAS + '?action=validateUser&email=' + encodeURIComponent(email) + '&pass=' + encodeURIComponent(pass))
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
       btn.disabled = false; err.textContent = '';
-      if (res && res.ok) {
-        ADMIN_TOKEN = pass;
+      if (!res || !res.ok) { err.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة'; return; }
+
+      SESSION_TOKEN = res.token; // store validated token in memory only
+
+      if (res.role === 'admin') {
+        ADMIN_TOKEN = res.token;
         CU = {email: email}; ROLE = 'admin';
         showPg('pg-adm'); initAdmin();
-      } else {
-        err.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+        return;
       }
+      // Determine monitor/supervisor from local lookup (display data only)
+      var sup = SUPS.find(function(s){ return s.e === email; });
+      if (sup) { SHIFT = SHIFT_NAMES[sup.s]||'الوردية الثانية'; CU={email:email,data:sup}; ROLE='supervisor'; showPg('pg-sup'); initSup(); return; }
+      var mon = MONS.find(function(m){ return m.e === email; });
+      if (mon) { SHIFT = SHIFT_NAMES[mon.s]||'الوردية الثانية'; CU={email:email,data:mon}; ROLE='monitor'; showPg('pg-mon'); initMon(); return; }
+      err.textContent = 'البريد غير موجود في قائمة المستخدمين';
+    })
+    .catch(function() {
+      btn.disabled = false;
+      err.textContent = 'فشل الاتصال بالخادم، تحقق من الإنترنت';
     });
-    return;
-  }
-  err.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
 }
 
 function logout() {
+  SESSION_TOKEN = null; ADMIN_TOKEN = null;
   CU = null; ROLE = null; REPS = [];
   if (window._autoRefreshTimer) { clearInterval(window._autoRefreshTimer); window._autoRefreshTimer = null; }
   document.getElementById('inp-email').value = '';
@@ -700,7 +706,7 @@ function supSetStatus(id, newStatus) {
   renderSupStats(myMons, REPS);
   renderSupMonList(myMons, REPS);
   renderSupTable();
-  if (GAS) gasGet({action:'updateStatus',id:id,status:newStatus,pass:MON_PASS}, function(){});
+  if (GAS) gasGet({action:'updateStatus',id:id,status:newStatus,pass:SESSION_TOKEN}, function(){});
 }
 
 function toggleAcc(hdr) {
@@ -941,7 +947,7 @@ function deleteRep(id, role) {
 
   // Delete from GAS
   if (GAS) {
-    gasGet({action:'deleteReport', id:id, pass: ROLE==='admin' ? ADMIN_TOKEN : MON_PASS}, function(){});
+    gasGet({action:'deleteReport', id:id, pass: ROLE==='admin' ? ADMIN_TOKEN : SESSION_TOKEN}, function(){});
   }
 }
 
@@ -1151,8 +1157,8 @@ function loadReps(role, cb) {
   if (!GAS) { cb(local); return; }
 
   var params = {action:'list', pass:ADMIN_TOKEN};
-  if (role==='monitor')    { params.email=CU.email; params.pass=MON_PASS; }
-  if (role==='supervisor') { params.action='listByZones'; params.zones=CU.data.z.join(','); params.pass=MON_PASS; }
+  if (role==='monitor')    { params.email=CU.email; params.pass=SESSION_TOKEN; }
+  if (role==='supervisor') { params.action='listByZones'; params.zones=CU.data.z.join(','); params.pass=SESSION_TOKEN; }
 
   gasGet(params, function(data) {
     if (Array.isArray(data)) {
@@ -1196,7 +1202,7 @@ function saveAllLocal() {
 
 function gasPost(data, cb, _attempt) {
   // Use GET to avoid CORS/redirect issues with GAS
-  var payload = Object.assign({}, data, {pass: MON_PASS});
+  var payload = Object.assign({}, data, {pass: SESSION_TOKEN || ''});
   var qs = Object.keys(payload).map(function(k){
     return encodeURIComponent(k)+'='+encodeURIComponent(payload[k]||'');
   }).join('&');
