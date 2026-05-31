@@ -826,13 +826,6 @@ if (checkId) {
 } else {
   viewRequest();
 }
-// ─── ROUTER ───────────────────────────────────────────────────────────────────
-const view    = params.get('v');
-const checkId = params.get('check');
-if      (checkId)            viewTrackById(checkId);
-else if (view === 'leader')  viewLeaderLogin();
-else if (view === 'admin')   viewAdminLogin();
-else                         viewMember();
 </script>
 
 <footer style="text-align:center;padding:28px 16px 40px;font-family:'Tajawal',sans-serif;background:#0a1a0d;border-top:1px solid rgba(201,162,39,.2);margin-top:8px">
