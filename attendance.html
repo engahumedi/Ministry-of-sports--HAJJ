@@ -7,33 +7,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Tajawal',sans-serif;background:#f5f5f5;color:#1a1a1a;min-height:100vh}
+body{font-family:'Tajawal',sans-serif;background:#080f0a;color:rgba(255,255,255,.88);min-height:100vh}
 
-nav{background:#0a2e18;color:#c9a227;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;border-bottom:2px solid #c9a227}
+nav{background:linear-gradient(135deg,#0a2e18,#1a6b3c);color:#e8c44a;box-shadow:0 4px 16px rgba(10,46,24,.5);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;border-bottom:1px solid rgba(201,162,39,.35)}
 .nav-title{font-size:1rem;font-weight:700}
 .nav-sub{font-size:.75rem;color:rgba(255,255,255,.6);margin-top:2px}
-.nav-back{color:rgba(255,255,255,.8);text-decoration:none;font-size:.85rem;border:1px solid rgba(255,255,255,.3);padding:5px 12px;border-radius:20px}
+.nav-back{color:rgba(255,255,255,.8);text-decoration:none;font-size:.85rem;border:1px solid rgba(255,255,255,.18);padding:5px 12px;border-radius:20px}
 
 .tabs{display:flex;gap:8px;padding:16px 16px 0;max-width:600px;margin:0 auto}
-.tab-btn{flex:1;padding:10px;border:none;border-radius:10px 10px 0 0;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.9rem;font-weight:700;background:#ddd;color:#555;transition:.2s}
-.tab-btn.active{background:#0a2e18;color:#c9a227}
+.tab-btn{flex:1;padding:10px;border:none;border-radius:10px 10px 0 0;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.9rem;font-weight:700;background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);transition:.2s}
+.tab-btn.active{background:linear-gradient(135deg,#0a2e18,#1a6b3c);color:#e8c44a;box-shadow:0 4px 16px rgba(10,46,24,.5)}
 
-.card{background:#fff;border-radius:0 0 16px 16px;padding:24px;max-width:600px;margin:0 auto;box-shadow:0 4px 20px rgba(0,0,0,.08)}
-.section-title{font-size:1.05rem;font-weight:800;color:#0a2e18;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid #f0f0f0}
+.card{background:rgba(255,255,255,.05);border-radius:0 0 20px 20px;border:1px solid rgba(201,162,39,.15);padding:24px;max-width:600px;margin:0 auto;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.section-title{font-size:1.05rem;font-weight:800;color:#e8c44a;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.1)}
 
 .field{margin-bottom:16px}
-.field label{display:block;font-size:.88rem;font-weight:700;color:#333;margin-bottom:6px}
+.field label{display:block;font-size:.88rem;font-weight:700;color:rgba(255,255,255,.72);margin-bottom:6px}
 .field label .req{color:#e53935;margin-right:3px}
-.field input{width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:10px;font-family:'Tajawal',sans-serif;font-size:1rem;outline:none;transition:.2s}
-.field input:focus{border-color:#1a6b3c;box-shadow:0 0 0 3px rgba(26,107,60,.1)}
+.field input{width:100%;padding:12px 14px;border:2px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.9);font-family:'Tajawal',sans-serif;font-size:1rem;outline:none;transition:.2s}
+.field input:focus{border-color:#c9a227;box-shadow:0 0 0 3px rgba(201,162,39,.15)}
 .field input.err-input{border-color:#e53935}
-.hint{font-size:.76rem;color:#888;margin-top:4px}
+.hint{font-size:.76rem;color:rgba(255,255,255,.38);margin-top:4px}
 
-.gps-box{border:2px solid #e0e0e0;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;transition:.2s}
-.gps-box.ok{border-color:#2e7d32;background:#f1f8f1}
-.gps-box.err{border-color:#e53935;background:#fff5f5}
+.gps-box{border:2px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);transition:.2s}
+.gps-box.ok{border-color:#2e8b57;background:rgba(46,139,87,.15)}
+.gps-box.err{border-color:#e53935;background:rgba(229,57,53,.1)}
 .gps-icon{font-size:1.5rem;flex-shrink:0}
-.gps-text{flex:1;font-size:.85rem}
+.gps-text{flex:1;font-size:.85rem;color:rgba(255,255,255,.75)}
 .gps-btn{padding:8px 14px;border-radius:8px;border:none;background:#1a6b3c;color:#fff;font-family:'Tajawal',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;flex-shrink:0}
 .gps-btn:disabled{background:#aaa;cursor:not-allowed}
 
@@ -42,21 +42,21 @@ nav{background:#0a2e18;color:#c9a227;padding:14px 20px;display:flex;align-items:
 
 .success{text-align:center;padding:30px 20px}
 .success-icon{font-size:3.5rem;margin-bottom:12px;display:block}
-.success-title{font-size:1.4rem;font-weight:900;color:#1a6b3c;margin-bottom:8px}
-.success-sub{color:#666;margin-bottom:20px;line-height:1.6}
-.success-details{background:#f5fbf7;border-radius:10px;padding:14px;margin-bottom:20px;text-align:right}
-.success-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #e8f5e9;font-size:.9rem}
+.success-title{font-size:1.4rem;font-weight:900;color:#e8c44a;margin-bottom:8px}
+.success-sub{color:rgba(255,255,255,.5);margin-bottom:20px;line-height:1.6}
+.success-details{background:rgba(255,255,255,.05);border-radius:10px;border:1px solid rgba(255,255,255,.08);padding:14px;margin-bottom:20px;text-align:right}
+.success-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:.9rem}
 .success-row:last-child{border:none}
-.s-lbl{color:#666}
-.s-val{font-weight:700;color:#1a6b3c}
+.s-lbl{color:rgba(255,255,255,.45)}
+.s-val{font-weight:700;color:#e8c44a}
 .new-btn{background:#c9a227;color:#0a2e18;font-weight:800;padding:10px 28px;border-radius:30px;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.95rem}
 
 .admin-login{text-align:center;padding:20px}
 .lock-icon{font-size:2.5rem;margin-bottom:10px;display:block}
-.login-title{font-size:1rem;font-weight:800;color:#0a2e18;margin-bottom:4px}
-.login-sub{font-size:.82rem;color:#888;margin-bottom:16px}
+.login-title{font-size:1rem;font-weight:800;color:#e8c44a;margin-bottom:4px}
+.login-sub{font-size:.82rem;color:rgba(255,255,255,.4);margin-bottom:16px}
 .login-err{color:#e53935;font-size:.85rem;margin-top:8px;min-height:20px}
-.login-btn{width:100%;max-width:260px;padding:12px;border:none;border-radius:12px;background:#0a2e18;color:#c9a227;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:800;cursor:pointer}
+.login-btn{width:100%;max-width:260px;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#0a2e18,#1a6b3c);color:#e8c44a;box-shadow:0 4px 16px rgba(10,46,24,.5);font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:800;cursor:pointer}
 
 .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .stat-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
@@ -64,31 +64,31 @@ nav{background:#0a2e18;color:#c9a227;padding:14px 20px;display:flex;align-items:
 .stat-num{font-size:1.6rem;font-weight:900;color:#c9a227;display:block}
 .stat-lbl{font-size:.75rem;color:rgba(255,255,255,.7)}
 .toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.search-in{flex:1;min-width:140px;padding:9px 12px;border:2px solid #e0e0e0;border-radius:10px;font-family:'Tajawal',sans-serif;font-size:.9rem;outline:none}
+.search-in{flex:1;min-width:140px;padding:9px 12px;border:2px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.9);font-family:'Tajawal',sans-serif;font-size:.9rem;outline:none}
 .tool-btn{padding:8px 14px;border-radius:10px;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.82rem;font-weight:700}
-.btn-csv{background:#c9a227;color:#0a2e18}
-.btn-del{background:#ffebee;color:#c62828;border:1px solid #ffcdd2}
-.btn-out{background:#f5f5f5;color:#555;border:1px solid #ddd}
-.btn-ref{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}
-.btn-toggle-open{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}
-.btn-toggle-close{background:#fff3e0;color:#e65100;border:1px solid #ffcc80}
-.closed-banner{background:#fff3e0;border:2px solid #ffcc80;border-radius:16px;padding:40px 24px;text-align:center;max-width:600px;margin:0 auto}
+.btn-csv{background:linear-gradient(135deg,#c9a227,#e8c44a);color:#0a2e18}
+.btn-del{background:rgba(198,40,40,.15);color:#ff6b6b;border:1px solid rgba(198,40,40,.3)}
+.btn-out{background:rgba(255,255,255,.07);color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.15)}
+.btn-ref{background:rgba(46,107,60,.15);color:#5cbb88;border:1px solid rgba(46,107,60,.3)}
+.btn-toggle-open{background:rgba(46,107,60,.15);color:#5cbb88;border:1px solid rgba(46,107,60,.3)}
+.btn-toggle-close{background:rgba(230,81,0,.15);color:#ffaa50;border:1px solid rgba(230,81,0,.3)}
+.closed-banner{background:rgba(230,81,0,.1);border:2px solid rgba(230,81,0,.3);border-radius:16px;padding:40px 24px;text-align:center;max-width:600px;margin:0 auto}
 .closed-icon{font-size:3rem;display:block;margin-bottom:12px}
-.closed-title{font-size:1.3rem;font-weight:900;color:#e65100;margin-bottom:8px}
-.closed-sub{color:#888;font-size:.9rem}
+.closed-title{font-size:1.3rem;font-weight:900;color:#ffaa50;margin-bottom:8px}
+.closed-sub{color:rgba(255,255,255,.45);font-size:.9rem}
 
-.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid #f0f0f0}
-table{width:100%;border-collapse:collapse;font-size:.85rem}
-thead tr{background:#0a2e18;color:#fff}
-th{padding:10px 12px;text-align:right;white-space:nowrap;font-weight:700}
-td{padding:10px 12px;border-bottom:1px solid #f5f5f5;vertical-align:middle}
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid rgba(201,162,39,.15)}
+table{width:100%;border-collapse:collapse;font-size:.85rem;color:rgba(255,255,255,.75)}
+thead tr{background:linear-gradient(135deg,#0a2e18,#1a6b3c)}
+th{padding:10px 12px;text-align:right;white-space:nowrap;font-weight:700;color:#e8c44a}
+td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle;color:rgba(255,255,255,.78)}
 tr:last-child td{border:none}
-tr:hover td{background:#fafafa}
+tr:hover td{background:rgba(255,255,255,.05)}
 .del-btn{background:none;border:none;cursor:pointer;color:#ccc;font-size:.95rem;padding:3px 6px;border-radius:6px}
 .del-btn:hover{color:#e53935;background:#ffebee}
-.map-link{color:#1a6b3c;text-decoration:none;font-size:.78rem}
+.map-link{color:#5cbb88;text-decoration:none;font-size:.78rem}
 .empty{text-align:center;padding:30px;color:#aaa}
-.refresh-bar{font-size:.75rem;color:#aaa;text-align:center;margin-bottom:10px}
+.refresh-bar{font-size:.75rem;color:rgba(255,255,255,.3);text-align:center;margin-bottom:10px}
 
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#0a2e18;color:#fff;padding:11px 22px;border-radius:30px;font-size:.88rem;font-weight:600;z-index:999;transition:.3s cubic-bezier(.34,1.56,.64,1);border:1px solid #c9a227;white-space:nowrap;pointer-events:none}
 #toast.show{transform:translateX(-50%) translateY(0)}
@@ -521,9 +521,9 @@ document.getElementById('exportBtn').addEventListener('click', () => {
 });
 </script>
 
-<footer style="text-align:center;padding:28px 16px 40px;font-family:'Tajawal',sans-serif;background:#fff;border-top:2px solid #e8f5e9;margin-top:8px">
-  <div style="font-size:.85rem;color:#888;margin-bottom:6px">تصميم وبرمجة</div>
-  <div style="font-size:1.2rem;font-weight:900;color:#0a2e18">القائد / م.المهند حمدي</div>
+<footer style="text-align:center;padding:28px 16px 40px;font-family:'Tajawal',sans-serif;background:#0a1a0d;border-top:1px solid rgba(201,162,39,.2);margin-top:8px">
+  <div style="font-size:.85rem;color:rgba(255,255,255,.4);margin-bottom:6px">تصميم وبرمجة</div>
+  <div style="font-size:1.2rem;font-weight:900;color:#e8c44a">القائد / م.المهند حمدي</div>
   <a href="https://wa.me/966599746324" target="_blank" style="display:inline-block;margin-top:8px;background:#25d366;color:#fff;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;padding:8px 22px;border-radius:30px;text-decoration:none">تواصل واتساب</a>
   <div style="width:48px;height:3px;background:#c9a227;border-radius:4px;margin:10px auto 0"></div>
 </footer>
